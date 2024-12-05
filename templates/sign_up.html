@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}
+    VoteChain Sign Up
+{% endblock %}
+{% block main %}
+    <form class="form" action="/main" method="POST" id="SignUpForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">User Name</label>
+            <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Mother Name</label>
+            <input type="text" class="form-control" id="motherName" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">National Id</label>
+            <input type="text" class="form-control" id="nationalId" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Family Name</label>
+            <input type="text" class="form-control" id="familyName" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" placeholder="phone Number">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Rewrite Password</label>
+            <input type="password" class="form-control" id="re_password" placeholder="Confirm your password">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </form>
+{% endblock %}
