@@ -11,19 +11,23 @@
     <link href="styles_home.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to bottom, #fff, #d9e1e8);
+            background: linear-gradient(to bottom, #fff, #03396C);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0;
+            /* zoom: 1.5; Adjust value to make the content bigger */
         }
         .form-container {
             background: #fff;
             border-radius: 10px;
-            padding: 30px;
+            padding: 50px;
+            padding-left: 70px;
+            padding-right: 70px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 900px;
+            height: 550px;
         }
         .logo {
             text-align: center;
@@ -34,7 +38,26 @@
         }
         .form-container a {
             text-decoration: none;
-            color: #007bff;
+            color: #03396C;
+        }
+        /* .form-floating .form-control {
+            height: calc(3.5rem + 2px); /* Match height of other inputs */
+        /* } */
+
+        .form-floating label {
+            /* line-height: calc(3.5rem + 2px); Align the label */
+            margin-left: 10px;
+            color: #999999;
+        } 
+        .form-floating .form-control:focus ~ label,
+        .form-floating .form-control:not(:placeholder-shown) ~ label {
+            transform: translateY(-1.5rem);
+            font-size: 0.85rem;
+            color: #03396C;
+        }
+        .button-center {
+            display: flex;
+            justify-content: center;
         }
     </style>
     
@@ -46,7 +69,7 @@
 <body>
     <div class="form-container">
         <div class="logo">
-            <img src="https://via.placeholder.com/80x80?text=Logo" alt="VoteChain Logo">
+            <img src="../voteChain.jpg" alt="VoteChain Logo">
             <h5>VoteChain</h5>
         </div>
         <main>
