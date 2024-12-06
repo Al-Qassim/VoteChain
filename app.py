@@ -18,5 +18,14 @@ def login():
     else:
         return jsonify({"message": "Invalid credentials."}), 401
 
+@app.route('/homepage')
+def homepage():
+    return render_template("homepage.html")
+
+@app.route('/login')
+def loginn():
+    return render_template("login.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
