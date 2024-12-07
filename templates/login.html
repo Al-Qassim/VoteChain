@@ -26,18 +26,19 @@
             max-width: 900px;
             background: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 18px;
             overflow: hidden;
         }
         .form-container {
             background: #fff;
             border-radius: 10px;
-            padding: 50px;
+            /* padding: 50px; */
             /* padding-left: 70px; */
             /* padding-right: 70px; */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             width: 900px;
             height: 550px;
+            background-color: #03396C;
         }
         .form-container a {
             text-decoration: none;
@@ -60,11 +61,13 @@
         }
         .vote-section {
             flex: 1;
-            background-color: #e6f7ff;
+            /* background-color: #e6f7ff; */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            /* padding: 20px; */
+            /* padding-bottom: 50px; */
+            border-radius: 8px;
         }
         .vote-section img {
             width: 80%;
@@ -73,6 +76,8 @@
         .login-section {
             flex: 1;
             padding: 40px;
+            background-color: #999999;
+            border-radius: 18px;
         }
         h2 {
             text-align: center;
@@ -133,10 +138,23 @@
 </head>
 <body>
     <div class="container form-container">
+
+
         <div class="vote-section">
-            <img src="vote.png" alt="Voting Image">
+            <div class="col" style="margin: 20px; color: #fff;">
+                <div class="row">
+                    <h1><b>Act as if the whole elections depends on your single vote.</b></h1>
+                </div>
+                <hr>
+                <div class="row">
+                    <h3>-John Wesley</h3>
+                </div>
+            </div>
         </div>
-        <div class="login-section">
+
+
+
+        <div class="login-section" style="margin: auto;">
             <h2>LOGIN</h2>
             <form class="form" action="/main" method="POST" id="LoginForm">
                 <div class="form-floating" style="padding-bottom: 20px;">
