@@ -26,6 +26,13 @@ def homepage():
 def loginn():
     return render_template("login.html")
 
+@app.route('/forgetPassword')
+def forgetPassword():
+    return render_template("forgetPassword.html")
+
+@app.route('/reset_password')
+def resetPassword():
+    return render_template("reset_password.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
