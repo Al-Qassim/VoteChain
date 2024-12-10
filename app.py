@@ -4,23 +4,14 @@ app = Flask(__name__)
 
 @app.route('/sign_up')
 def index():
-    return render_template('sign_up.html')
+    image_url = 'C:\\Users\\Hadeel\\Downloads\\voteChain.jpg'
+    return render_template('sign_up.html',image_url=image_url)
 
-@app.route('/main', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    # Replace this with actual authentication logic
-    if username == 'admin' and password == 'password':
-        return jsonify({"message": "Login successful!"}), 200
-    else:
-        return jsonify({"message": "Invalid credentials."}), 401
-
-@app.route('/homepage')
+@app.route('/homepage',methods=['POST','GET'])
 def homepage():
-    return render_template("homepage.html")
+    image_url = 'C:\\Users\\Hadeel\\Downloads\\voteChain.jpg'
+    image_url1 = 'https://e3.365dm.com/24/08/1600x900/skynews-2024-us-election-teaser_6671376.png?20240830164706'
+    return render_template("homepage.html",image_url=image_url,image_url1=image_url1)
 
 @app.route('/login')
 def loginn():
@@ -32,7 +23,12 @@ def forgetPassword():
 
 @app.route('/reset_password')
 def resetPassword():
-    return render_template("reset_password.html")
+    return render_template("reset_password.html",image_url="./voteChain.jpg")
+
+
+@app.route("/voteChain.jpg")
+def image():
+    return render_template("voteChain.jpg")
 
 if __name__ == '__main__':
     app.run(debug=True)
