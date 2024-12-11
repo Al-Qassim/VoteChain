@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    HomePage
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Portfolio</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th>Symbol</th>
+                <th>Shares</th>
+                <th>Current Price</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- TODO: Loop through the database entries to display them in this table -->
+            {% for r in data %}
+            <tr>
+                <td>{{ r["stock"] }}</td>
+                <td>{{ r["symbol"] }}</td>
+                <td>{{ r["shares"] }}</td>
+                <td>{{ r["currentPrice"] | usd }}</td>
+                <td>{{ r["value"] | usd }}</td>
+            </tr>
+            {% endfor%}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Cash</th>
+                <th>{{ cash | usd }}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Grand Total</th>
+                <th>{{ grandTotal | usd }}</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div>
+    <form action="/" method="post">
+        <input autocomplete="off" required name="deposite" placeholder="cash" type="float">
+        <button class="btn btn-primary" type="submit">Deposite</button>
+    </form>
+</div>
+
+{% endblock %}

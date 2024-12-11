@@ -1,7 +1,12 @@
 {% extends "layout.html" %}
+
 {% block title %}
-    main
+    Quoted
 {% endblock %}
+
 {% block main %}
-    <h1>I am in !</h1>
+    <h2>
+        {{ q.name }} ({{q.symbol}}): {{q.price | usd}}
+    </h2>
+
 {% endblock %}
