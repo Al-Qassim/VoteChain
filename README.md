@@ -11,7 +11,7 @@ Despite the digital age we live in, elections are still conducted with paper in 
     * **Plurality** (https://cs50.harvard.edu/x/2024/psets/3/plurality/)
     * **Runoff** (https://cs50.harvard.edu/x/2024/psets/3/runoff/)
     * **Tideman** (https://cs50.harvard.edu/x/2024/psets/3/tideman/)
-* A simple candedates voting (A feature to the future is to support "The Party List System").   
+* A simple candedates voting (The Party List System will be supported in the future).   
 
 ## Election System Requirments
 Any election system should garenty the folloing security requirment
@@ -34,26 +34,36 @@ The blockchain feature is not implemented yet, and will be the last feature to b
 ## Database Structure
 
 the database contains several tables, the following are the tables and columns it contain:
-* users
-    * user_id int primary key,
-    * username,
-    * hash_password text, --will also be used as signiture public key
-    * phone_number,
-    * signiture_private_key,
-* elections
-    * election_id int primary key,
-    * discription,
-    * deadline,
-    * voting_system,
-    * zkproof,
-    * results
-* candedates
-    * candedate_id int primary key,
-    * election_id int,
-    * description
-* voters
-    * voter_id int primary key,
-    * election_id int,
-    * commission_public_key text,
-    * commission_private_key text,
-    * election_ballot  text
+
+```python
+db.execute("""
+    ceatre table users (
+        user_id int primary key,
+        username text unique,
+        hash_password text,
+        phone_number text,
+        signiture_private_key text,
+        signiture_public_key text 
+    )
+""")
+
+db.execute("""
+    ceatre table elections (
+        election_id int primary key,
+        discription text,
+        deadline text,
+        voting_system text,
+        zkproof text default null,
+        results text default null
+    )
+""")
+
+db.execute("""
+    ceatre table candedates (
+        candedate_id int primary key,
+        election_id int,
+        private_key text,
+        public_key text 
+    )
+""")
+```   
