@@ -179,3 +179,20 @@ def resetPassword():
                 
         return redirect("/login")
 
+@app.route("/voting_ballot")
+def voting_ballot():
+    return render_template("voting-ballot.html")
+
+@app.route("/voter")
+def voter_page():
+    american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
+    trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
+    kamala_pic = 'https://news.stanford.edu/__data/assets/image/0023/45950/Headshot_harris_vertical.jpeg'
+    republican = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Republican_Disc.svg/1200px-Republican_Disc.svg.png'
+    Vice_President = "JD Vance"
+    republican_txt = "Republican"
+    return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
