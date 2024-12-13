@@ -39,9 +39,12 @@ def login():
 
     # Forget any user_id
     session.clear()
+    # User reached route via GET (as by clicking a link or via redirect)
+    if request.method == "GET":
+        return render_template("login.html")
 
     # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
+    elif request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
             return apology("must provide username", 403)
@@ -57,19 +60,15 @@ def login():
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
-            rows[0]["hash"], request.form.get("password")
+            rows[0]["hash_password"], request.form.get("password")
         ):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0]["user_id"]
 
         # Redirect user to home page
         return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
 
 @app.route("/logout")
 def logout():
@@ -79,7 +78,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
+    return redirect("/login")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -90,32 +89,33 @@ def register():
 
     # User reached route via POST (as by submitting a form via POST)
     elif request.method == "POST":
-        # Ensure username was submitted
+        # Ensure all information was submitted
         if not request.form.get("username"):
             return apology("must provide username", 400)
-
-        # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 400)
-
-        # Query database for username
+        elif not request.form.get("rewrite_password"):
+            return apology("must rewrite password", 400)
+        elif not request.form.get("phone_number"):
+            return apology("must provide Phone Number", 400)
+        
+        # check user name not used username
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
-
-        # Ensure username doesn't exist
         if len(rows) != 0:
             return apology("username already taken", 400)
 
         # Ensure same password
-        if request.form.get("password") != request.form.get("confirmation"):
+        if request.form.get("password") != request.form.get("rewrite_password"):
             return apology("not the same password", 400)
 
         # record user name and hashed password
         db.execute(
-            "insert into users (username, hash) values (?, ?)",
+            "insert into users (username, hash_password, phone_number) values (?, ?, ?)",
             request.form.get("username"),
-            generate_password_hash( request.form.get("password") )
+            generate_password_hash( request.form.get("password") ),
+            request.form.get("phone_number")
         )
 
         # Redirect user to login
