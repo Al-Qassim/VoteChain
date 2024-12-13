@@ -66,7 +66,7 @@ def login():
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
-            rows[0]["hash_password"], request.form.get("password")
+            rows[0]["hash_password"], request.form.get("username") + request.form.get("password")
         ):
             return apology("invalid username and/or password", 403)
 
@@ -130,7 +130,7 @@ def register():
         db.execute(
             "insert into users (username, hash_password, phone_number) values (?, ?, ?)",
             request.form.get("username"),
-            generate_password_hash( request.form.get("password") ),
+            generate_password_hash( request.form.get("username") + request.form.get("password") ),
             request.form.get("phone_number")
         )
 
@@ -152,6 +152,7 @@ def forgetPassword():
         
         # Remember which user has logged in
         session["user_id_to_reset_password"] = rows[0]["user_id"]
+        session["username_to_reset_password"] = rows[0]["username"]
         
         return redirect("/reset_password")
 
@@ -173,7 +174,7 @@ def resetPassword():
         # hashed change password 
         db.execute(
             "update users set hash_password = ?",
-            generate_password_hash( request.form.get("password") )
+            generate_password_hash( session["username_to_reset_password"] + request.form.get("password") )
             )
                 
         return redirect("/login")
