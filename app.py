@@ -26,8 +26,6 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    """Show portfolio of stocks"""
-    # TODO
     if request.method == "GET":
         return render_template("homepage.html",image_url='..\\images\\voteChain.jpg', image_url1='..\\images\\2024-us-election.png')
     elif request.method == "POST":
@@ -35,7 +33,15 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
+    """
+    Log user in
+
+    requist = {
+        "username": value,
+        "password": value
+        }
+    
+    """
 
     # Forget any user_id
     session.clear()
@@ -82,7 +88,17 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
+    """
+    Register user
+
+    requist = {
+        "username": value,
+        "password": value,
+        "rewrite_password": value,
+        "phone_number": value
+        }
+    
+    """
     # User reached route via GET (as by clicking a link or via redirect)
     if request.method == "GET":
         return render_template("register.html")
@@ -121,10 +137,44 @@ def register():
         # Redirect user to login
         return redirect("/login")
 
-@app.route('/forgetPassword')
+@app.route('/forgetPassword', methods=["GET", "POST"])
 def forgetPassword():
-    return render_template("forgetPassword.html")
+    if request.method == "GET":
+        return render_template("forgetPassword.html")
+    elif request.method == "POST":
+        if not request.form.get("username_or_phone_number"):
+            return apology("must provide username or phone number", 400)
+        
+        # check user name and phone number
+        rows = db.execute("SELECT * FROM users WHERE username = ? or phone_number = ?", request.form.get("username_or_phone_number"), request.form.get("username_or_phone_number"))
+        if len(rows) != 1:
+            return apology("no username or phone number mach exist", 400)
+        
+        # Remember which user has logged in
+        session["user_id_to_reset_password"] = rows[0]["user_id"]
+        
+        return redirect("/reset_password")
 
-@app.route('/reset_password')
+@app.route('/reset_password', methods=["GET", "POST"])
+@forget_password_required
 def resetPassword():
-    return render_template("reset_password.html",image_url="images/voteChain.jpg")
+    if request.method == "GET":
+        return render_template("reset_password.html")
+    elif request.method == "POST":
+        if not request.form.get("password"):
+            return apology("must provide password", 400)
+        if not request.form.get("rewrite_password"):
+            return apology("must reset password", 400)
+        
+        # Ensure same password
+        if request.form.get("password") != request.form.get("rewrite_password"):
+            return apology("not the same password", 400)
+
+        # hashed change password 
+        db.execute(
+            "update users set hash_password = ?",
+            generate_password_hash( request.form.get("password") )
+            )
+                
+        return redirect("/login")
+

@@ -50,6 +50,16 @@ def login_required(f):
 
     return decorated_function
 
+def forget_password_required(f):
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id_to_reset_password") is None:
+            return redirect("/forgetPassword")
+        return f(*args, **kwargs)
+
+    return decorated_function
+
 # Create tables
 def create_tables_if_not_exist(db_path=""):
     if not os.path.exists(db_path):
