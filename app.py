@@ -1,4 +1,4 @@
-from server import *
+from helpers import *
 
 # Configure application
 app = Flask(__name__)
@@ -27,7 +27,7 @@ def after_request(response):
 @login_required
 def index():
     if request.method == "GET":
-        return render_template("homepage.html",image_url='..\\images\\voteChain.jpg', image_url1='..\\images\\2024-us-election.png')
+        return render_template("homepage.html")
     elif request.method == "POST":
         pass
 
