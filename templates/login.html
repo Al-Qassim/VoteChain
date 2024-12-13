@@ -134,13 +134,22 @@
         .btn.secondary:hover {
             background-color: #5a6268;
         }
+        .grid-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            align-items: center;
+            gap: 20px; /* Space between the columns */
+            background-color: #03396C; /* Matches the primary blue */
+            color: #ffffff;
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container form-container">
-
-
-        <div class="vote-section">
+        <div class="vote-section grid-left">
             <div class="col" style="margin: 20px; color: #fff;">
                 <div class="row">
                     <h1><b>Act as if the whole elections depends on your single vote.</b></h1>
@@ -152,9 +161,7 @@
             </div>
         </div>
 
-
-
-        <div class="login-section" style="margin: auto;">
+        <div class="login-section grid-right" style="margin: auto;">
             <h2>LOGIN</h2>
             <form class="form" action="/homepage" method="POST" id="LoginForm">
                 <div class="form-floating" style="padding-bottom: 20px;">

@@ -4,20 +4,33 @@
 {% endblock %}
 
 {% block main %}
-    <form class="form" action="/main" method="POST" id="homepageForm">
-      <h3 class="h5 mb-3" style="padding-left: 20px;">Right Now</h3>
-          <a href="/main" style="text-decoration: none;">
-            <section class="grid-section">
-  
-              <div class="grid-left">
-                <h4>2024 United States Presidential Election</h4>
-                <p class="text-danger">Final day at Tuesday, November 5, 2024</p>
-              </div>
-              <div class="grid-right">
-                <img src="{{ image_url1 }}" alt="Vote people">
-              </div>
-              
-            </section>
-          </a>
-    </form>
+  <section class="grid-section">
+    <!-- Left Content (Logo and Title) -->
+    <div class="grid-left text-center">
+      <img src="logo.png" alt="VoteChain Logo" class="mb-3" style="max-width: 150px;">
+      <h2>VoteChain</h2>
+    </div>
+    
+    <!-- Right Content (Description and Button) -->
+    <div class="grid-right text-center">
+      <h3 style="padding-bottom: 25px;">Modern solution for a more secure electronic voting</h3>
+      <a href="https://vitalik.eth.limo/general/2021/05/25/voting2.html" class="btn">Learn more</a>
+    </div>
+  </section>
+  <form class="form" action="/voter" method="POST" id="homepageForm">
+    <h3 class="h5 mb-3" style="padding-left: 20px;">Right Now</h3>
+        <a href="/voter" style="text-decoration: none;">
+          <section class="grid-section">
+
+            <div class="grid-left">
+              <h4>2024 United States Presidential Election</h4>
+              <p class="text-danger">Final day at Tuesday, November 5, 2024</p>
+            </div>
+            <div class="grid-right">
+              <img src="{{ image_url1 }}" alt="Vote people">
+            </div>
+            
+          </section>
+        </a>
+  </form>
 {% endblock %}

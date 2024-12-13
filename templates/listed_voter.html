@@ -1,0 +1,68 @@
+{% extends "homepage_layout.html" %}
+{% block title %}
+    Voters page
+{% endblock %}
+
+{% block main %}
+    <section class="grid-section" style="padding: 0.2px; padding-top: 10px; margin: 0.2px;">
+        <div class="grid-left text-center">
+            <h3 style="padding-bottom: 25px;">2024 United States Presidential Election</h3>
+            <a href="voting_ballot" class="btn">Request Your Voting Ballot </a>
+        </div>
+
+        <div class="grid-right text-center" style="padding-right: 10px;">
+            <img src="{{american_img}}" alt="American" class="mb-3" style="max-width: 350px;">
+        </div>
+    </section>
+    <div>
+        <p class="text-danger text-center" style="padding-top: 10px; padding-bottom: 10px;"><u>Final day at Tuesday, November 5, 2024</u></p>
+    </div>
+    <form class="form" action="/voter" method="POST" id="voters" style="place-items: center;">
+
+        <section class="grid-section" style="max-width: 750px; max-height: auto; padding: 2px; place-items: center;">
+
+
+                <div class="grid-left">
+                    <section class="grid-section" style="max-height: auto; margin: auto; padding: auto;">
+                        <div class="grid-left">
+                            <img src="{{ trump_pic }}" alt="Vote people" style="max-width: auto; border-radius: 30%">
+                        </div>
+                        <div class="grid-right">
+                            <h3><b>Donald J. Trump</b></h3>
+                            <p style="margin-top: 30px; max-width: auto;">Vice President: {{Vice_President}}</p>
+                        </div>
+                    </section>
+                </div>
+
+
+                <div class="grid-right">
+                    <section class="grid-section" style="max-height: auto; margin: auto; margin-left: 200px; padding: 1px;">
+                        <div class="grid-left">
+                            <img src="{{ republican }}" alt="Vote people" style="max-width: 100px; border-radius: 30%">
+                            <p style="margin-top: 30px; text-align: center;">{{republican_txt}}</p>
+                        </div>
+                    </section>
+                </div>
+        </section>
+
+
+
+
+        <!-- <section class="grid-section">
+            <section class="grid-section" style="padding: 10px;">
+                <div class="grid-left">
+                    <section class="grid-section" style="padding: 0.2px; margin: 0.2px;">
+                        <div class="grid-left">
+                            <img src="{{ trump_pic }}" alt="Vote people" class="mb-3" style="max-width: 150px;">
+                        </div>
+                        <div class="grid-right" style="margin-left: 3.5px;">
+                            <h3><b>Donald J. Trump</b></h3>
+                            <p style="margin-top: 30px;">Vice President: {{Vice_President}}</p>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </section> -->
+        
+      </form> 
+{% endblock %}
