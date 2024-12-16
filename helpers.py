@@ -106,19 +106,4 @@ def create_tables_if_not_exist(db_path=""):
         #        casher                  int
         #    )
         #""")
-#
-        #for i in [
-        #    ["add new product and service"  , 1, 1],
-        #    ["add new person"               , 1, 1],
-        #    ["new buy/sell order"           , 1, 1],
-        #    ["return order"                 , 1, 1],
-        #    ["delete a person"              , 1, 0],
-        #    ["delete a product/service"     , 1, 0],
-        #    ["delete a transaction"         , 1, 0],
-        #    ["edit product/service details" , 1, 0],
-        #    ["edit transaction details"     , 1, 0],
-        #    ["edit person details"          , 1, 0],
-        #    ["edit return order"            , 1, 0]
-        #]:
-        #    db.execute("insert into rolles ( Permeations, admin, casher) values (?,?,?)", i)
 
