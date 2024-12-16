@@ -54,5 +54,35 @@ The blockchain feature is not implemented yet, and will be the last feature to b
 the database contains several tables, the following are the tables and columns it contain:
 
 ```
-TODO: put the sql ctreate table code here
-```   
+
+db.execute("""
+    create table users (
+        user_id int primary key,
+        username text unique,
+        hash_password text,
+        phone_number text,
+        signiture_private_key text,
+        signiture_public_key text 
+    )
+""")
+
+db.execute("""
+    create table elections (
+        election_id int primary key,
+        discription text,
+        deadline text,
+        voting_system text,
+        zkproof text default null,
+        results text default null
+    )
+""")
+
+db.execute("""
+    create table candedates (
+        candedate_id int primary key,
+        election_id int,
+        private_key text,
+        public_key text 
+    )
+""")
+```
