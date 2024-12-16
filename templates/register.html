@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Register Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,7 +73,7 @@
             width: 80%;
             max-width: 300px;
         }
-        .login-section {
+        .register-section {
             flex: 1;
             padding: 40px;
             background-color: #999999;
@@ -134,49 +134,34 @@
         .btn.secondary:hover {
             background-color: #5a6268;
         }
-        .grid-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            align-items: center;
-            gap: 20px; /* Space between the columns */
-            background-color: #03396C; /* Matches the primary blue */
-            color: #ffffff;
-            border-radius: 10px; /* Rounded corners */
-            padding: 20px;
-            margin: 20px;
-        }
     </style>
 </head>
 <body>
     <div class="container form-container">
-        <div class="vote-section grid-left">
-            <div class="col" style="margin: 20px; color: #fff;">
-                <div class="row">
-                    <h1><b>Act as if the whole elections depends on your single vote.</b></h1>
-                </div>
-                <hr>
-                <div class="row">
-                    <h3>-John Wesley</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="login-section grid-right" style="margin: auto;">
-            <h2>LOGIN</h2>
-            <form class="form" action="/login" method="POST">
+        <div class="register-section" style="margin: auto;">
+            <h2>Register</h2>
+            <form class="form" action="/register" method="POST">
                 <div class="form-floating" style="padding-bottom: 20px;">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                     <label for="username" class="form-label">Username</label>
                 </div>
                 <div class="form-floating" style="padding-bottom: 20px;">
-                    <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
                     <label for="password" class="form-label">Password</label>
+                </div>
+                <div class="form-floating" style="padding-bottom: 20px;">
+                    <input type="password" id="rewrite_password" class="form-control" name="rewrite_password" placeholder="Rewrite Password" required>
+                    <label for="rewrite_password" class="form-label">Rewrite Password</label>
+                </div>
+                <div class="form-floating" style="padding-bottom: 20px;">
+                    <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Phone Number" required>
+                    <label for="phone_number" class="form-label">Phone Number</label>
                 </div>
                 <div class="actions">
                     <a href="/forgetPassword">Forgot password?</a>
                 </div>
-                <button type="submit" class="btn" style="background-color: #03396C;">Login</button>
-                <a href="/register" type="button" class="btn secondary">Register</a>
+                <button type="submit" class="btn" style="background-color: #03396C;">Register</button>
+                <a href="/login" type="button" class="btn secondary">Login</a>
             </form>
         </div>
     </div>
