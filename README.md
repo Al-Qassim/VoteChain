@@ -56,15 +56,17 @@ the database contains several tables, the following are the tables and columns i
 ```
 
 db.execute("""
-    create table users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        username text unique,
-        hash_password text,
-        phone_number text,
-        signiture_private_key text,
-        signiture_public_key text 
+    CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username TEXT UNIQUE,
+    hash_password TEXT,
+    phone_number TEXT,
+    signiture_private_key TEXT,
+    signiture_public_key TEXT,
+    date DATE NOT NULL DEFAULT CURRENT_DATE
     )
 """)
+ALTER TABLE table_name ADD COLUMN column_name column_type;
 
 db.execute("""
     create table elections (
