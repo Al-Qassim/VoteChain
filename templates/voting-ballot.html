@@ -4,74 +4,63 @@
 {% endblock %}
 {% block main %}
     <!-- Election Section -->
-    <section class="mb-4 text-center">
-      <div class="p-4 bg-primary text-white rounded">
-        <h3>2024 United States Presidential Election</h3>
+    <section class="grid-section" style="padding: 0.2px; padding-top: 10px; margin: 0.2px; margin-bottom: 15px;">
+      <div class="grid-left text-center">
+          <h3 style="padding-bottom: 25px;">2024 United States Presidential Election</h3>
+      </div>
+
+      <div class="grid-right text-center" style="padding-right: 10px;">
+          <img src="{{american_img}}" alt="American" class="mb-3" style="max-width: 350px;">
       </div>
     </section>
 
-
     <!-- Voting Ballot Section -->
-    <section class="p-4 border rounded bg-light">
+    <section class="p-4 border rounded form-container ">
       <h4 class="mb-3">Voting Ballot</h4>
       <!-- Candidate Options -->
       
       <form class="form" action="/voting_ballot" method="POST" id="votingBallot">
         
-        <div class="mb-3 d-flex align-items-center border p-3 rounded bg-white">
-          <div class="me-3">
-            <!-- Placeholder for candidate image -->
-            <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
+        <section class="grid-section" style="max-width: auto; max-height: auto; padding: 2px; place-items: center;">
+          <div class="grid-left">
+            <section class="grid-section" style="max-height: auto; margin: auto; padding: auto;">
+                <div class="grid-left">
+                    <img src="{{ trump_pic }}" alt="Vote people" style="max-width: 50px; border-radius: 50%">
+                </div>
+                <div class="grid-right">
+                    <h5>Donald J. Trump</h5>
+                </div>
+                
+            </section>
           </div>
-          <div class="flex-grow-1">
-            <label class="form-check-label">
-              <strong>Donald J. Trump</strong>
-            </label>
+          <div class="grid-right">
+            <section class="grid-section" style="max-height: auto; margin-left: auto;">
+              <input class="form-check-input" type="radio" name="vote" value="trump">
+            </section>
+            
           </div>
-          <div>
-            <input class="form-check-input" type="radio" name="vote" value="trump">
-          </div>
-        </div>
+        </section style="place-items: center;">
+        
 
 
-        <div class="mb-3 d-flex align-items-center border p-3 rounded bg-white">
-          <div class="me-3">
-            <!-- Placeholder for candidate image -->
-            <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
+        <section class="grid-section" style="place-items: left; padding-left: 50px; max-width: auto; background-color: #6d95ba; opacity: 10px;">
+          <div class="grid-left">
+            <!-- Password and Submit -->
+            <div class="mb-3" style="max-width: 700px;">
+              <p style="margin-left: 1px;">Please write your password before submit the voting</p>
+              <input type="password" class="form-control" placeholder="Password">
+            </div>
           </div>
-          <div class="flex-grow-1">
-            <label class="form-check-label">
-              <strong>Kamala D. Harris</strong>
-            </label>
+          
+          <div class="grid-right"> 
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary w-60">Submit</button>
+            </div>
           </div>
-          <div>
-            <input class="form-check-input" type="radio" name="vote" value="harris">
-          </div>
-        </div>
-
-
-        <div class="mb-4 d-flex align-items-center border p-3 rounded bg-white">
-          <div class="me-3">
-            <!-- Placeholder for candidate image -->
-            <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
-          </div>
-          <div class="flex-grow-1">
-            <label class="form-check-label">
-              <strong>Robert F. Kennedy Jr.</strong>
-            </label>
-          </div>
-          <div>
-            <input class="form-check-input" type="radio" name="vote" value="kennedy">
-          </div>
-        </div>
-
-
-
-        <!-- Password and Submit -->
-        <div class="mb-3">
-          <input type="password" class="form-control" placeholder="Password">
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Submit</button>
+          
+        </section>
+        
+        
 
         
       </form>

@@ -63,7 +63,7 @@ def login():
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
-
+        
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash_password"], request.form.get("username") + request.form.get("password")
@@ -140,7 +140,7 @@ def register():
 @app.route('/forgetPassword', methods=["GET", "POST"])
 def forgetPassword():
     if request.method == "GET":
-        return render_template("forgetPassword.html")
+        return render_template("forgetPassword.html",image_url='..\\images\\voteChain.jpg')
     elif request.method == "POST":
         if not request.form.get("username_or_phone_number"):
             return apology("must provide username or phone number", 400)
@@ -181,7 +181,9 @@ def resetPassword():
 
 @app.route("/voting_ballot")
 def voting_ballot():
-    return render_template("voting-ballot.html")
+    american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
+    trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
+    return render_template("voting-ballot.html",american_img=american_img, trump_pic=trump_pic)
 
 @app.route("/voter")
 def voter_page():
