@@ -195,6 +195,23 @@ def voter_page():
     republican_txt = "Republican"
     return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
 
+@app.route("/account")
+def account():
+    if request.method == "GET":
+        se1 = session.get("user_id")
+        if isinstance(se1, list):
+            se1 = se1[0]["id"]
+        
+        username = db.execute("SELECT username FROM users WHERE user_id =? ",se1)[0]['username']
+        phone = db.execute("SELECT phone_number FROM users WHERE user_id=? ",se1)[0]['phone_number']
+        date = db.execute("SELECT date FROM users WHERE user_id =? ",se1)[0]['date']
+        return render_template("account.html",id_person = se1, name_person = username, phone_person=phone, registration_date_person=date)
+
+
+@app.route("/create_poll")
+def create_poll():
+    return render_template("create_poll.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
 
