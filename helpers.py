@@ -96,6 +96,14 @@ def create_tables_if_not_exist(db_path=""):
             );
         """)
 
+        db.execute("""
+            create table votes (
+                vote_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                election_id int,
+                voting_ballot text,
+            );
+        """)
+
 
         # rolles Table
         #db.execute("""
