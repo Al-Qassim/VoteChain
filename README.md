@@ -57,7 +57,7 @@ the database contains several tables, the following are the tables and columns i
 
 db.execute("""
     create table users (
-        user_id int primary key,
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         username text unique,
         hash_password text,
         phone_number text,
