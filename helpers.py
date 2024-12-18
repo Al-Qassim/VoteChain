@@ -6,6 +6,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from time import time, ctime
+from datetime import datetime
 
 from cs50 import SQL
 from functools import wraps
@@ -115,3 +116,5 @@ def create_tables_if_not_exist(db_path=""):
         #    )
         #""")
 
+def add_new_poll(r, db):
+    pass
