@@ -65,7 +65,7 @@ def login():
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
-
+        
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash_password"], request.form.get("username") + request.form.get("password")
@@ -152,7 +152,7 @@ def register():
 @app.route('/forgetPassword', methods=["GET", "POST"])
 def forgetPassword():
     if request.method == "GET":
-        return render_template("forgetPassword.html")
+        return render_template("forgetPassword.html",image_url='..\\images\\voteChain.jpg')
     elif request.method == "POST":
         if not request.form.get("username_or_phone_number"):
             flash("Please provide username or phone number", "error")
@@ -198,7 +198,9 @@ def resetPassword():
 
 @app.route("/voting_ballot")
 def voting_ballot():
-    return render_template("voting-ballot.html")
+    american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
+    trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
+    return render_template("voting-ballot.html",american_img=american_img, trump_pic=trump_pic)
 
 @app.route("/voter")
 def voter_page():
@@ -230,6 +232,23 @@ def creat_poll():
                 return jsonify({"message": "Error: please provide all fields, {i} is missing"}), 400
 
 
+
+@app.route("/account")
+def account():
+    if request.method == "GET":
+        se1 = session.get("user_id")
+        if isinstance(se1, list):
+            se1 = se1[0]["id"]
+        
+        username = db.execute("SELECT username FROM users WHERE user_id =? ",se1)[0]['username']
+        phone = db.execute("SELECT phone_number FROM users WHERE user_id=? ",se1)[0]['phone_number']
+        date = db.execute("SELECT date FROM users WHERE user_id =? ",se1)[0]['date']
+        return render_template("account.html",id_person = se1, name_person = username, phone_person=phone, registration_date_person=date)
+
+
+@app.route("/create_poll")
+def create_poll():
+    return render_template("create_poll.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
