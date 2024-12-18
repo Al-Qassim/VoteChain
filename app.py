@@ -53,11 +53,13 @@ def login():
     elif request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            flash("Please provide username", "error")
+            return render_template("login.html"), 400
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            flash("Please provide password", "error")
+            return render_template("login.html"), 403
 
         # Query database for username
         rows = db.execute(
@@ -68,7 +70,8 @@ def login():
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash_password"], request.form.get("username") + request.form.get("password")
         ):
-            return apology("invalid username and/or password", 403)
+            flash("invalid username and/or password", "error")
+            return render_template("login.html"), 403
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
@@ -107,24 +110,33 @@ def register():
     elif request.method == "POST":
         # Ensure all information was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 400)
+            flash("Please provide username", "error")
+            return render_template("register.html"), 400
+        
         elif not request.form.get("password"):
-            return apology("must provide password", 400)
+            flash("Please provide password", "error")
+            return render_template("register.html"), 400
+        
         elif not request.form.get("rewrite_password"):
-            return apology("must rewrite password", 400)
+            flash("Please rewrite password", "error")
+            return render_template("register.html"), 400
+        
         elif not request.form.get("phone_number"):
-            return apology("must provide Phone Number", 400)
+            flash("Please provide phone number", "error")
+            return render_template("register.html"), 400
         
         # check user name not used username
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
         if len(rows) != 0:
-            return apology("username already taken", 400)
+            flash("Username already taken, choose another one", "error")
+            return render_template("register.html"), 403
 
         # Ensure same password
         if request.form.get("password") != request.form.get("rewrite_password"):
-            return apology("not the same password", 400)
+            flash("Passwords don't match", "error")
+            return render_template("register.html"), 403
 
         # record user name and hashed password
         db.execute(
@@ -143,12 +155,14 @@ def forgetPassword():
         return render_template("forgetPassword.html")
     elif request.method == "POST":
         if not request.form.get("username_or_phone_number"):
-            return apology("must provide username or phone number", 400)
+            flash("Please provide username or phone number", "error")
+            return render_template("forgetPassword.html"), 400
         
         # check user name and phone number
         rows = db.execute("SELECT * FROM users WHERE username = ? or phone_number = ?", request.form.get("username_or_phone_number"), request.form.get("username_or_phone_number"))
         if len(rows) != 1:
-            return apology("no username or phone number mach exist", 400)
+            flash("no username or phone number match exist", "error")
+            return render_template("forgetPassword.html"), 403
         
         # Remember which user has logged in
         session["user_id_to_reset_password"] = rows[0]["user_id"]
@@ -163,13 +177,16 @@ def resetPassword():
         return render_template("reset_password.html")
     elif request.method == "POST":
         if not request.form.get("password"):
-            return apology("must provide password", 400)
+            flash("Please provide password", "error")
+            return render_template("reset_password.html"), 400
         if not request.form.get("rewrite_password"):
-            return apology("must reset password", 400)
+            flash("Please rewrite password", "error")
+            return render_template("reset_password.html"), 400
         
         # Ensure same password
         if request.form.get("password") != request.form.get("rewrite_password"):
-            return apology("not the same password", 400)
+            flash("Passwords don't match", "error")
+            return render_template("reset_password.html"), 400
 
         # hashed change password 
         db.execute(
@@ -193,21 +210,28 @@ def voter_page():
     republican_txt = "Republican"
     return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
 
-
 # recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
 @app.route("/create_poll", methods=["GET", "POST"])
 def creat_poll():
     if request.method == "GET":
         return render_template("create_poll.html")
     elif request.method == "POST":
-        input = [
+        inputs = [
             "title",
+            "date",
             "number_of_voters",
-            "candidates",
+            "discription",
+            "voting_system"
+            "candidate 1",
+            "candidate 2"
         ]
-        return request.json
+        for i in inputs:
+            if request.json.get(i) == None:
+                return jsonify({"message": "Error: please provide all fields, {i} is missing"}), 400
+
 
 
 if __name__ == '__main__':
     app.run(debug=True)
 
+ 
