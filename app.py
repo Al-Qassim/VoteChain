@@ -1,4 +1,4 @@
-from server import *
+from helpers import *
 
 # Configure application
 app = Flask(__name__)
@@ -192,6 +192,21 @@ def voter_page():
     Vice_President = "JD Vance"
     republican_txt = "Republican"
     return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
+
+
+# recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
+@app.route("/create_poll", methods=["GET", "POST"])
+def creat_poll():
+    if request.method == "GET":
+        return render_template("create_poll.html")
+    elif request.method == "POST":
+        input = [
+            "title",
+            "number_of_voters",
+            "candidates",
+        ]
+        return request.json
+
 
 if __name__ == '__main__':
     app.run(debug=True)
