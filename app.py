@@ -246,10 +246,6 @@ def account():
         return render_template("account.html",id_person = se1, name_person = username, phone_person=phone, registration_date_person=date)
 
 
-@app.route("/create_poll")
-def create_poll():
-    return render_template("create_poll.html")
-
 if __name__ == '__main__':
     app.run(debug=True)
 
