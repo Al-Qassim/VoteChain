@@ -139,11 +139,13 @@ def register():
             return render_template("register.html"), 403
 
         # record user name and hashed password
+
         db.execute(
-            "insert into users (username, hash_password, phone_number) values (?, ?, ?)",
+            "insert into users (username, hash_password, phone_number, date) values (?, ?, ?, ?)",
             request.form.get("username"),
             generate_password_hash( request.form.get("username") + request.form.get("password") ),
-            request.form.get("phone_number")
+            request.form.get("phone_number"),
+            datetime.fromtimestamp(time()).strftime('%d-%m-%Y')
         )
 
         # Redirect user to login
@@ -212,28 +214,83 @@ def voter_page():
     republican_txt = "Republican"
     return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
 
-# recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
 @app.route("/create_poll", methods=["GET", "POST"])
 def creat_poll():
     if request.method == "GET":
         return render_template("create_poll.html")
     elif request.method == "POST":
+        # recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
         inputs = [
             "title",
             "date",
             "number_of_voters",
             "discription",
-            "voting_system"
-            "candidate 1",
-            "candidate 2"
+            "voting_system",
+            "candidate_1",
+            "candidate_2" # candidate_3, candidate_4, ...
         ]
+        
         for i in inputs:
-            if request.json.get(i) == None:
-                return jsonify({"message": "Error: please provide all fields, {i} is missing"}), 400
+            
+            if request.form.get(i) == "":
+                flash("Please provide all fields, {i} is missing")
+                return render_template("create_poll.html"), 400
+        number_of_candidates = 0
+        for i in request.form:
+            if i[:9] == "candidate":
+                number_of_candidates += 1
+        try:
+            int(request.form.get("number_of_voters"))
+        except:
+            flash("Please an integer for the number of voters")
+            return render_template("create_poll.html"), 400
+        
+        # add new poll
 
+        db.execute("""
+            INSERT INTO polls (
+                user_id,
+                title,
+                deadline,
+                number_of_voters,
+                discription,
+                voting_system       
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            """,
+                session["user_id"],
+                request.form.get("title"),
+                request.form.get("date"),
+            int(request.form.get("number_of_voters")), # TODO: make sure the user give integer here 
+                request.form.get("discription"),
+                request.form.get("voting_system")
+        )
 
+        # add candidates
 
-@app.route("/account")
+        poll_id = db.execute("""
+                select * from polls where user_id = ? and title = ?;
+                """,
+                session["user_id"],
+                request.form.get("title")
+            )[0]["poll_id"]
+        
+        for i in range(number_of_candidates):
+            db.execute("""
+            INSERT INTO candidates (
+                candidate_name,
+                poll_id,
+                candidate_index
+                ) VALUES (?, ?, ?)
+            """,
+                request.form.get(f"candidate_{i+1}"),
+                poll_id,
+                i+1
+            )
+
+        return redirect("/account"), 200
+
+        
+@app.route("/account", methods=["GET"])
 def account():
     if request.method == "GET":
         se1 = session.get("user_id")
