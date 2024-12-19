@@ -286,7 +286,6 @@ def creat_poll():
                 poll_id,
                 i+1
             )
-
         return redirect("/account"), 200
 
         
