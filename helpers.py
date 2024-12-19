@@ -11,6 +11,8 @@ from datetime import datetime
 from cs50 import SQL
 from functools import wraps
 
+import rsa
+import pandas as pd
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -61,3 +63,7 @@ def forget_password_required(f):
 
     return decorated_function
 
+if __name__=="__main__":
+
+    db = SQL("sqlite:///Database.db")
+    pd.DataFrame(db.execute("select * from users")).to_csv("static/keys/test.csv")

@@ -24,7 +24,7 @@ def after_request(response):
     return response
 
 @app.route("/", methods=["GET", "POST"])
-@login_required
+# @login_required
 def index():
     if request.method == "GET":
         polls = db.execute("""
@@ -251,7 +251,8 @@ def creat_poll():
             if i[:9] == "candidate":
                 number_of_candidates += 1
         try:
-            int(request.form.get("number_of_voters"))
+            if int(request.form.get("number_of_voters")) < 1:
+                raise Exception("Sorry, no numbers below one")
         except:
             flash("Please an integer for the number of voters")
             return render_template("create_poll.html"), 400
@@ -298,10 +299,26 @@ def creat_poll():
                 i+1
             )
 
+        # save the poll image
         if request.files['Poll image']:
             file = request.files['Poll image']
             file.save("static/images/polls images/"+f"{session["user_id"]}_" + request.form.get("title") + "." + "png")
         
+        # generate public and private keys
+        for i in range(int(request.form.get("number_of_voters"))):
+            public_key, private_key = rsa.newkeys(1024)
+            db.execute("""
+            INSERT INTO votes (
+                poll_id,
+                public_key,
+                private_key
+                ) VALUES (?, ?, ?)
+            """,
+                poll_id,
+                public_key.save_pkcs1("PEM").decode(),
+                private_key.save_pkcs1("PEM").decode()
+            )
+
         return redirect("/account")
 
 @app.route("/delete_poll", methods=["POST"])
@@ -371,7 +388,6 @@ def poll():
         
         return request.form
 
-        
 if __name__ == '__main__':
     app.run(debug=True)
 
