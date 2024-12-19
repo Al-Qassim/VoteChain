@@ -69,6 +69,21 @@
             height: auto;
         }
   </style>
+  <script>
+    var candidates_count = 2;
+    function addCandidateInput() {
+        candidates_count += 1;
+        var container = document.getElementById('candidate-inputs');
+        var input = document.createElement('input');
+        input.className  = "form-control";
+        input.type = 'text';
+        input.name = 'candidate_'+candidates_count;
+        input.placeholder = 'Enter the name of candidate ' + candidates_count;
+        input.required = true;
+        input.style = 'margin-bottom:10px'
+        container.appendChild(input);
+    }
+  </script>
 </head>
 <body>
   <header class="bg-light shadow">

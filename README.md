@@ -66,7 +66,6 @@ db.execute("""
     date DATE NOT NULL DEFAULT CURRENT_DATE
     )
 """)
-ALTER TABLE table_name ADD COLUMN column_name column_type;
 
 db.execute("""
     create table elections (
