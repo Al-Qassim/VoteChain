@@ -7,7 +7,7 @@
   <section class="grid-section">
     <!-- Left Content (Logo and Title) -->
     <div class="grid-left text-center">
-      <img src="logo.png" alt="VoteChain Logo" class="mb-3" style="max-width: 150px;">
+      <img src="../static/images/voteChain.jpg" alt="VoteChain Logo" class="mb-3" style="max-width: 150px;">
       <h2>VoteChain</h2>
     </div>
     
@@ -17,20 +17,26 @@
       <a href="https://vitalik.eth.limo/general/2021/05/25/voting2.html" class="btn">Learn more</a>
     </div>
   </section>
-  <form class="form" action="/voter" method="POST" id="homepageForm">
+  <!-- <form class="form" action="/voter" method="POST" id="homepageForm"> -->
     <h3 class="h5 mb-3" style="padding-left: 20px;">Right Now</h3>
-        <a href="/voter" style="text-decoration: none;">
-          <section class="grid-section">
+    {% for poll in polls%}
+    <a href='/poll?poll_id={{poll.poll_id }}' style="text-decoration: none;">
+      <section class="grid-section">
 
-            <div class="grid-left">
-              <h4>2024 United States Presidential Election</h4>
-              <p class="text-danger">Final day at Tuesday, November 5, 2024</p>
-            </div>
-            <div class="grid-right">
-              <img src="../static/images/2024-us-election.png" alt="Vote people">
-            </div>
-            
-          </section>
-        </a>
-  </form>
+        <div class="grid-left">
+          <h4>{{ poll.title }}</h4>
+          <p class="text-danger">Final day at {{poll.deadline}}</p>
+          <p>Created by {{poll.username}}</p>
+
+        </div>
+
+        <div class="grid-right"> 
+          <img src='../static/images/polls images/{{poll.user_id}}_{{poll.title}}.png' alt="">
+        </div>
+        
+      </section>
+    </a>
+    {% endfor %}
+
+  <!-- </form> -->
 {% endblock %}

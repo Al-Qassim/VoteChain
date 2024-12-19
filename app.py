@@ -27,7 +27,15 @@ def after_request(response):
 @login_required
 def index():
     if request.method == "GET":
-        return render_template("homepage.html",image_url='..\\images\\voteChain.jpg', image_url1='..\\images\\2024-us-election.png')
+        polls = db.execute("""
+            SELECT poll_id, users.user_id, title, username, deadline
+            FROM polls 
+            inner join users 
+            on users.user_id = polls.user_id
+        """)
+        
+        return render_template("homepage.html", polls = polls)
+    
     elif request.method == "POST":
         pass
 
@@ -199,12 +207,14 @@ def resetPassword():
         return redirect("/login")
 
 @app.route("/voting_ballot")
+@login_required
 def voting_ballot():
     american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
     trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
     return render_template("voting-ballot.html",american_img=american_img, trump_pic=trump_pic)
 
 @app.route("/voter")
+@login_required
 def voter_page():
     american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
     trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
@@ -215,9 +225,11 @@ def voter_page():
     return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
 
 @app.route("/create_poll", methods=["GET", "POST"])
+@login_required
 def creat_poll():
     if request.method == "GET":
         return render_template("create_poll.html")
+    
     elif request.method == "POST":
         # recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
         inputs = [
@@ -231,7 +243,6 @@ def creat_poll():
         ]
         
         for i in inputs:
-            
             if request.form.get(i) == "":
                 flash("Please provide all fields, {i} is missing")
                 return render_template("create_poll.html"), 400
@@ -287,23 +298,76 @@ def creat_poll():
                 i+1
             )
 
-        return redirect("/account"), 200
-
+        if request.files['Poll image']:
+            file = request.files['Poll image']
+            file.save("static/images/polls images/"+f"{session["user_id"]}_" + request.form.get("title") + "." + "png")
         
+        return redirect("/account")
+
+@app.route("/delete_poll", methods=["POST"])
+@login_required
+def delete():
+    poll_id = int(request.form.get("poll_id")) # TODO security needed
+    db.execute("""
+        DELETE FROM polls WHERE poll_id = ?;
+        """,
+        poll_id
+    ) 
+    db.execute("""
+        DELETE FROM candidates WHERE poll_id = ?;
+        """,
+        poll_id
+    ) 
+    db.execute("""
+        DELETE FROM votes WHERE poll_id = ?;
+        """,
+        poll_id
+    ) 
+    if os.path.exists(f"static/images/polls images/{session["user_id"]}_{request.form.get("title")}.png"):
+        os.remove(f"static/images/polls images/{session["user_id"]}_{request.form.get("title")}.png")
+    return redirect("/account")
+
 @app.route("/account", methods=["GET"])
+@login_required
 def account():
     if request.method == "GET":
-        se1 = session.get("user_id")
-        if isinstance(se1, list):
-            se1 = se1[0]["id"]
+        user_info = db.execute("SELECT user_id, username, phone_number, date FROM users WHERE user_id =? ",  session["user_id"])[0]
+        polls = db.execute("SELECT * FROM polls WHERE user_id =? ",  session["user_id"])
+        return render_template("account.html", user_info = user_info, polls = polls)
+
+@app.route("/admin_dashboard_poll", methods=["GET"])
+@login_required
+def admin_dashboard_poll():
+    poll_id = int(request.args.get("poll_id"))
+    poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+    candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
+    # TODO return a summary of the results so far
+    return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates)
+
+@app.route("/poll", methods=["GET", "POST"])
+@login_required
+def poll():
+    if request.method == "GET":
+        poll_id = int(request.args.get("poll_id"))
+        poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+        candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
+        # TODO return a summary of the results so far
+        return render_template("poll.html", poll = poll, candidates = candidates)
+    
+    elif request.method == "POST":
+        inputs = [
+            "candidate_index",
+            "poll_id",
+            "voting_key"
+        ]
+        # TODO security needed
+        try:
+            int(request.form.get("poll_id"))
+        except:
+            return redirect("/")
+        if request.form.get("candidate_index")
+
         
-        username = db.execute("SELECT username FROM users WHERE user_id =? ",se1)[0]['username']
-        phone = db.execute("SELECT phone_number FROM users WHERE user_id=? ",se1)[0]['phone_number']
-        date = db.execute("SELECT date FROM users WHERE user_id =? ",se1)[0]['date']
-        return render_template("account.html",id_person = se1, name_person = username, phone_person=phone, registration_date_person=date)
-
-
 if __name__ == '__main__':
     app.run(debug=True)
 
- 

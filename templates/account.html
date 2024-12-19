@@ -2,7 +2,7 @@
 {% block title %} Account - VoteChain {% endblock %}
 
 {% block main %}
-<form class="form" action="/account" method="GET" id="account" style="place-items: left;">
+<!--<form class="form" action="/account" method="GET" id="account" style="place-items: left;">-->
     <section class="grid-section" style="max-width: auto; max-height: auto; padding: 2px; grid-template-columns: 2fr 1fr">
 
 
@@ -12,34 +12,46 @@
                   <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt="profilePic" style="max-width: 100px; border-radius: 30%; margin-left: 70px;">
               </div>
               <div class="grid-right" style="max-width: fit-content;">
-                  <h5><b style="color: #999999;">Name: </b>{{name_person}}</h5>
-                  <h5><b style="color: #999999;">Phone number: </b>{{phone_person}}</h5>
-                  <h5><b style="color: #999999;">ID: </b>{{id_person}}</h5>
-                  <h5><b style="color: #999999;">Registration Date: </b>{{registration_date_person}}</h5>
+                  <h5><b style="color: #999999;">Name: </b>{{user_info["username"]}}</h5>
+                  <h5><b style="color: #999999;">Phone number: </b>{{user_info["phone_number"]}}</h5>
+                  <h5><b style="color: #999999;">ID: </b>TODO later</h5>
+                  <h5><b style="color: #999999;">Registration Date: </b>{{user_info["date"]}}</h5>
               </div>
           </section>
       </div>
 
       <div class="grid-right" style="padding-left: 10px;"></div>
   </section>
-</form>
+<!--</form>-->
 
-<form class="form" action="/elections" method="POST" id="yourCurrentPoll">
+<!--<form class="form" action="/elections" method="POST" id="yourCurrentPoll">--> 
   <h3 class="h5 mb-3" style="padding-left: 20px;">Yours polls</h3>
-      <a href="/elections" style="text-decoration: none;">
-        <section class="grid-section">
 
-          <div class="grid-left">
-            <h4>2024 United States Presidential Election</h4>
-            <p class="text-danger">Final day at Tuesday, November 5, 2024</p>
-          </div>
-          <div class="grid-right">
-            <img src="../static/images/2024-us-election.png" alt="Vote people">
-          </div>
-          
-        </section>
-      </a>
-</form>
+    {% for poll in polls%}
+    <a href='/admin_dashboard_poll?poll_id={{poll.poll_id }}' style="text-decoration: none;">
+      <section class="grid-section">
+
+        <div class="grid-left">
+          <h4>{{ poll.title }}</h4>
+          <p class="text-danger">Final day at {{poll.deadline}}</p>
+        </div>
+
+        <div class="grid-right"> 
+          <img src='../static/images/polls images/{{user_info.user_id}}_{{poll.title}}.png' alt="">
+        </div>
+        
+      </section>
+    </a>
+    <div>
+      <form method="POST" action="/delete_poll">
+        <input type="hidden" name="poll_id" value={{poll.poll_id}}>
+        <input type="hidden" name="title" value={{poll.title}}>
+        <button class="btn" type="submit" style="background-color: #ce4040; color: white;">Delete Poll</button>
+      </form>
+    </div>
+    {% endfor %}
+
+<!--</form>--> 
 <div>
   <section style="display: grid; place-items: center;">
     <a href="/create_poll" class="btn" style="background-color: #3e72a3; color: white;">Add Another Poll</a>

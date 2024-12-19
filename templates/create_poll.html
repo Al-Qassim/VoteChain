@@ -39,26 +39,38 @@
   
   <main class="container my-5">
     <h2>Create New Poll</h2>
-    <form action="/create_poll" method="POST">
-      <!-- Title input -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="/create_poll" method="POST" enctype="multipart/form-data" >
+      <!-- Title  -->
       <div class="mb-3">
         <label class="form-label">Title</label>
-        <input type="text" class="form-control" placeholder="Enter poll title" name="title">
+        <input type="text" class="form-control" placeholder="Enter poll title" name="title" required>
       </div>
-      <!-- date input -->
+      <!-- poll image  -->
+      <div class="mb-3">
+        <label class="form-label">Poll image</label>
+        <input type="file" name="Poll image" accept="image/*">
+      </div>
+      <!-- date  -->
       <div class="mb-3">
         <label class="form-label">Deadline</label>
-        <input type="date" class="form-control" name="date">
+        <input type="date" class="form-control" name="date" required>
       </div>
       <!-- Number of Voters -->
       <div class="mb-3">
         <label class="form-label">Number of Voters</label>
-        <input type="number" class="form-control" placeholder="Enter number of voters" name="number_of_voters">
+        <input type="number" class="form-control" placeholder="Enter number of voters" name="number_of_voters" required>
       </div>
       <!-- discription -->
       <div class="mb-3">
         <label class="form-label">Discription</label>
-        <input type="text" class="form-control" placeholder="Write a discription" name="discription">
+        <input type="text" class="form-control" placeholder="Write a discription" name="discription" value=" " required>
       </div>
       <!-- voting system -->
       <div class="mb-3">
