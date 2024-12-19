@@ -2,21 +2,6 @@
 {% block title %}Create Poll - VoteChain{% endblock %}
   
 {% block main %}
-  <script>
-    var candidates_count = 2;
-    function addCandidateInput() {
-        candidates_count += 1;
-        var container = document.getElementById('candidate-inputs');
-        var input = document.createElement('input');
-        input.className  = "form-control";
-        input.type = 'text';
-        input.name = 'candidate_'+candidates_count;
-        input.placeholder = 'Enter the name of candidate ' + candidates_count;
-        input.required = true;
-        container.appendChild(input);
-    }
-  </script>
-
 <h2 style="text-align: center;">Create New Poll</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -26,45 +11,56 @@
         {% endif %}
     {% endwith %}
     <form action="/create_poll" method="POST" enctype="multipart/form-data" >
-      <!-- Title  -->
-      <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" placeholder="Enter poll title" name="title" required>
-      </div>
-      <!-- poll image  -->
-      <div class="mb-3">
-        <label class="form-label">Poll image</label>
-        <input type="file" name="Poll image" accept="image/*">
-      </div>
-      <!-- date  -->
-      <div class="mb-3">
-        <label class="form-label">Deadline</label>
-        <input type="date" class="form-control" name="date" required>
-      </div>
-      <!-- Number of Voters -->
-      <div class="mb-3">
-        <label class="form-label">Number of Voters</label>
-        <input type="number" class="form-control" placeholder="Enter number of voters" name="number_of_voters" required>
-      </div>
-      <!-- discription -->
-      <div class="mb-3">
-        <label class="form-label">Discription</label>
-        <input type="text" class="form-control" placeholder="Write a discription" name="discription" value=" " required>
-      </div>
-      <!-- voting system -->
-      <div class="mb-3">
-        <label class="form-label">voting system</label>
-        <select type="number" class="form-control" placeholder="choose a voting system" name="voting_system">
-          <option value="Plurality">Plurality</option>
-          <option value="Runoff">Runoff</option>
-          <option value="Tideman">Tideman</option>
-        </select>
-      </div>
-      <!-- candidates -->
-      <div class="mb-3" id="candidate-inputs" >
-        <label class="form-label">Candidates</label>
-        <input type="text" class="form-control" name="candidate_1" placeholder="Enter the name of candidate 1" required>
-        <input type="text" class="form-control" name="candidate_2" placeholder="Enter the name of candidate 2" required>
+      <div class="grid-section">
+        <div class="grid-left">
+          <!-- Title input -->
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" placeholder="Enter poll title" name="title" required>
+          </div>
+          <!-- date input -->
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+          <!-- Number of Voters -->
+          <div class="mb-3">
+            <label class="form-label">Number of Voters</label>
+            <input type="number" class="form-control" placeholder="Enter number of voters" name="number_of_voters" required>
+          </div>
+          <!-- discription -->
+          <div class="mb-3">
+            <label class="form-label">Discription</label>
+            <input type="text" class="form-control" placeholder="Write a discription" name="discription" value=" " required>
+          </div>
+        </div>
+        <div class="grid-right">
+          <!-- voting system -->
+          <div class="mb-3">
+            <label class="form-label">voting system</label>
+            <select type="number" class="form-control" placeholder="choose a voting system" name="voting_system" required>
+              <option value="Plurality">Plurality</option>
+              <option value="Runoff">Runoff</option>
+              <option value="Tideman">Tideman</option>
+            </select>
+          </div>
+          <!-- poll image  -->
+          <div class="mb-3">
+            <label class="form-label">Poll image</label>
+            <input type="file" name="Poll image" accept="image/*">
+          </div>
+          <!-- candidates -->
+          <div class="mb-3" id="candidate-inputs">
+            <label class="form-label">Candidates</label>
+            <input type="text" class="form-control" name="candidate_1" placeholder="Enter the name of candidate 1" required style="margin-bottom: 10px;">
+            <input type="text" class="form-control" name="candidate_2" placeholder="Enter the name of candidate 2" required style="margin-bottom: 10px;">
+          </div>
+          <div style="margin: 20px;">
+            <!-- Buttons -->
+            <button type="button" class="btn" onclick="addCandidateInput()">Add Another Candidate</button>
+            <button type="submit" class="btn">Create</button>
+          </div>
+        </div>
       </div>
     </form>
 {% endblock %}

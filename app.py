@@ -244,7 +244,7 @@ def creat_poll():
         
         for i in inputs:
             if request.form.get(i) == "":
-                flash("Please provide all fields, {i} is missing")
+                flash(f"Please provide all fields, {i} is missing")
                 return render_template("create_poll.html"), 400
         number_of_candidates = 0
         for i in request.form:
@@ -365,7 +365,11 @@ def poll():
             int(request.form.get("poll_id"))
         except:
             return redirect("/")
-        if request.form.get("candidate_index")
+        if not request.form.get("candidate_index"):
+            flash("please vote correctly")
+            return redirect("/poll?poll_id="+request.form.get("poll_id"))
+        
+        return request.form
 
         
 if __name__ == '__main__':
