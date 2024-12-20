@@ -72,6 +72,25 @@
       text-align: center;
       color: red;
     }
+    
+    /* for small animation */
+    ul li:before {
+      background: #4267b2;
+    }
+    ul li:hover:before {
+      filter: blur(3px);
+      transform: scale(1.2);
+      /* box-shadow: 0 0 15px #d35400; */
+    }
+    ul li:hover:before {
+      box-shadow: 0 0 15px #4267b2;
+    }
+    ul li:hover {
+      color: #456cba;
+      box-shadow: 0 0 15px #4267b2;
+      text-shadow: 0 0 15px #4267b2;
+    }
+
   </style>
   <script>
     var candidates_count = 2;
@@ -87,6 +106,7 @@
         input.style = 'margin-bottom:10px'
         container.appendChild(input);
     }
+    
   </script>
 </head>
 <body>

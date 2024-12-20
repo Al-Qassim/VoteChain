@@ -152,12 +152,28 @@
             font-size: 20px;
             color: #ff0000;
         }
+        .animated-text {
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0; /* Initially invisible */
+            animation: fadeIn 2s ease-in-out forwards; /* Apply fade-in animation */
+            animation-delay: 1s; /* Delay before the animation starts */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container form-container">
         <div class="vote-section grid-left">
-            <div class="col" style="margin: 20px; color: #fff;">
+            <div class="col animated-text" style="margin: 20px; color: #fff;">
                 <div class="row">
                     <h1><b>Act as if the whole elections depends on your single vote.</b></h1>
                 </div>
