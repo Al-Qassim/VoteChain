@@ -1,44 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elections - VoteChain</title>
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  
-  <header class="bg-light py-3 shadow">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="/" style="text-decoration: none; color: black"><h1 class="h4">VoteChain</h1></a>
-      <nav>
-        <ul class="nav">
-          <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
-          <li class="nav-item"><a class="nav-link" href="e/lections">Elections</a></li>
-          <li class="nav-item"><a class="nav-link" href="/create_poll">Create Poll</a></li>
-          <li class="nav-item"><a class="nav-link text-danger" href="/logout">Logout</a></li>
-        </ul>
-      </nav>
+{% extends "homepage_layout.html" %}
+{% block title %}Elections - VoteChain{% endblock %}
+
+{% block main %}
+<h2>Your Polls</h2>
+  <div class=" form-container card mb-3 p-50" style="background-color: #03396C; color: white;">
+    <h3 style="text-align: left; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">{{poll.title}}</h3>
+    
+    <div class="grid-section" style="margin-bottom: 2px;">
+      <div class="grid-left">
+        <h5>{{poll.voting_system}}</h5>
+        <h5>Number of Voters: {{poll.number_of_voters}}</h5>
+        <h5>Number of votes so far: TODO</h5>
+      </div>
     </div>
-  </header>
-  
-  <main class="container my-5">
-    <h2>Your Polls</h2>
-    <div class="card mb-3 p-3">
-      <h3>{{poll.title}}</h3>
-      <p>{{poll.voting_system}}</p>
-      <p>Number of Voters: {{poll.number_of_voters}}</p>
-      <p>Number of votes so far: TODO</p>
+
+    <div class="grid-section" style="margin-top: 10px;">
+      {% for candidate in candidates%}
+        <div class="card mb-3 p-3" style="background-color: #999999;">
+          <h4 style="text-align: left; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{candidate.candidate_name}}</h4>
+          <p style="margin-left: 15px; color: #03396C;">Number of votes so far: TODO</p>
+        </div>
+      {% endfor %}
     </div>
-    {% for candidate in candidates%}
-    <div class="card mb-3 p-3">
-      <h4>{{candidate.candidate_name}}</h4>
-      <p>Number of votes so far: TODO</p>
-    </div>
-    {% endfor %}
-  </main>
+    
+  </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+{% endblock %}
