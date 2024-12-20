@@ -388,6 +388,10 @@ def poll():
         
         return request.form
 
+@app.route("/about")
+def about():
+    return render_template("about_page.html",img1='..\\images\\voteChain.jpg')
+
 if __name__ == '__main__':
     app.run(debug=True)
 
