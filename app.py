@@ -302,7 +302,7 @@ def creat_poll():
         # save the poll image
         if request.files['Poll image']:
             file = request.files['Poll image']
-            file.save("static/images/polls images/"+f"{session["user_id"]}_" + request.form.get("title") + "." + "png")
+            file.save("static/images/polls images/"+f"{poll_id}"+".png")
         
         # generate public and private keys
         for i in range(int(request.form.get("number_of_voters"))):
@@ -340,8 +340,8 @@ def delete():
         """,
         poll_id
     ) 
-    if os.path.exists(f"static/images/polls images/{session["user_id"]}_{request.form.get("title")}.png"):
-        os.remove(f"static/images/polls images/{session["user_id"]}_{request.form.get("title")}.png")
+    if os.path.exists(f"static/images/polls images/{poll_id}.png"):
+        os.remove(f"static/images/polls images/{poll_id}.png")
     return redirect("/account")
 
 @app.route("/account", methods=["GET"])
@@ -377,15 +377,18 @@ def poll():
             "poll_id",
             "voting_key"
         ]
-        # TODO security needed
         try:
             int(request.form.get("poll_id"))
         except:
+            flash("vote correctly and provide valid poll_id")
             return redirect("/")
         if not request.form.get("candidate_index"):
-            flash("please vote correctly")
+            flash("please vote correctly and choose one of the candidates")
             return redirect("/poll?poll_id="+request.form.get("poll_id"))
         
+        # make sure the voting key is correct, use the voting key and the poll_id
+        # if not, flash a message
+        # if yes, make sure the candidate_index is valid, i.e. 0 < candidate_index <= number of candidates
         return request.form
 
 @app.route("/about")

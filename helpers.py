@@ -12,6 +12,7 @@ from cs50 import SQL
 from functools import wraps
 
 import rsa
+
 import pandas as pd
 
 def apology(message, code=400):
