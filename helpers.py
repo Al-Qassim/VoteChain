@@ -12,7 +12,7 @@ from cs50 import SQL
 from functools import wraps
 
 import rsa
-
+import base64
 import pandas as pd
 
 def apology(message, code=400):
@@ -65,6 +65,6 @@ def forget_password_required(f):
     return decorated_function
 
 if __name__=="__main__":
-
     db = SQL("sqlite:///Database.db")
-    pd.DataFrame(db.execute("select * from users")).to_csv("static/keys/test.csv")
+    # calculate_results(41, db)
+    # pd.DataFrame(db.execute("select * from users")).to_csv("static/keys/test.csv")

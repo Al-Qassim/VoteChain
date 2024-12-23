@@ -2,6 +2,7 @@
 {% block title %}Elections - VoteChain{% endblock %}
 
 {% block main %}
+
 <h2>Your Polls</h2>
   <div class=" form-container card mb-3 p-50" style="background-color: #03396C; color: white;">
     <h3 style="text-align: left; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">{{poll.title}}</h3>
@@ -10,7 +11,7 @@
       <div class="grid-left">
         <h5>{{poll.voting_system}}</h5>
         <h5>Number of Voters: {{poll.number_of_voters}}</h5>
-        <h5>Number of votes so far: TODO</h5>
+        <h5>Number of votes so far: {{poll.Number_of_votes_so_far}}</h5>
       </div>
     </div>
 
@@ -18,7 +19,7 @@
       {% for candidate in candidates%}
         <div class="card mb-3 p-3" style="background-color: #999999;">
           <h4 style="text-align: left; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{candidate.candidate_name}}</h4>
-          <p style="margin-left: 15px; color: #03396C;">Number of votes so far: TODO</p>
+          <p style="margin-left: 15px; color: #03396C;">Got {{candidate.count}} votes ({{candidate.percentage}}%) so far</p>
         </div>
       {% endfor %}
     </div>

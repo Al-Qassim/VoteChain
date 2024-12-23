@@ -4,13 +4,7 @@
 {% block main %}
 
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" style="color: red">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+
 
 
 <h3 style="text-align: center; margin-bottom: 50px;">{{poll.title}}</h3>
@@ -18,7 +12,7 @@
 
 
 
-  <form class="form" action="/poll" method="POST">
+  <form class="form" action="/poll" method="POST" id="voting_ballot">
     <div class="form-container" style="background-color: #03396C; max-width: auto;">
       <h5 style="text-align:left; color: white;">{{poll.voting_system}}</h5>
       <div class="grid-section">
@@ -31,7 +25,7 @@
               </div>
 
               <div class="grid-right">
-                <input type="radio" id="{{candidate.candidate_index}}" name="candidate_index" value={{candidate.candidate_index}} style="margin-left: 100px;">
+                <input type="radio" id="candidate_index" name="candidate_index" value={{candidate.candidate_index}} style="margin-left: 100px;">
               </div>
               
               
@@ -47,14 +41,62 @@
             <input name="poll_id" hidden value = {{poll.poll_id}}>
           </div>
           
-          <button type="submit" class="btn btn-secondary" style="background-color: #999999; color: #03396C; place-items: center;">Submit Voting Ballot</button>
+          <button type="submit" class="btn btn-secondary" style="background-color: #999999; color: #03396C; place-items: center;">Encrypt and Send Voting Ballot</button>
         </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="color: rgb(255, 255, 255)">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
       </div>
       
     </div>
     
   </form>
-
+  <!-- code for encryption -->
+  <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
+  <script>
+    document.getElementById("voting_ballot").addEventListener("submit", function(event) {
+        event.preventDefault();
+        console.log("candidate_index:", event.target.elements.candidate_index.value);
+        var message = event.target.elements.candidate_index.value;
+        var publicKey = document.getElementById("voting_key").value;
+    
+        // Create an instance of JSEncrypt
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(publicKey);  // Set the public key
+    
+        // Encrypt the message
+        var encryptedMessage = encrypt.encrypt(message);
+    
+        // Check if the message was encrypted
+        if (encryptedMessage) {
+            console.log("Encrypted Message: " + encryptedMessage);
+    
+            // Send the encrypted message to the Flask backend
+            fetch("/poll", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    encryptedMessage: encryptedMessage,
+                    poll_id: 41,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from backend:", data);
+                location.reload();
+            })
+            .catch(error => console.error("Error:", error));
+        } else {
+            alert("Encryption failed!");
+        }
+    });
+    </script>
 </section>
 
 

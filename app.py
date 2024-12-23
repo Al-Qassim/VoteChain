@@ -34,7 +34,7 @@ def index():
             on users.user_id = polls.user_id
         """)
         
-        return render_template("homepage.html", polls = polls)
+        return render_template("homepage.html", polls = polls, login= session.get("user_id", 0))
     
     elif request.method == "POST":
         pass
@@ -211,7 +211,7 @@ def resetPassword():
 def voting_ballot():
     american_img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqI97lBrpfjG7wo0zytKSKSStwS29FfYYL4Q&s'
     trump_pic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1MWm4Uc-yhWB5bkRg8r_Vy6ueABFtDb_qSA&s'
-    return render_template("voting-ballot.html",american_img=american_img, trump_pic=trump_pic)
+    return render_template("voting-ballot.html",american_img=american_img, trump_pic=trump_pic, login= session.get("user_id", 0))
 
 @app.route("/voter")
 @login_required
@@ -222,13 +222,13 @@ def voter_page():
     republican = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Republican_Disc.svg/1200px-Republican_Disc.svg.png'
     Vice_President = "JD Vance"
     republican_txt = "Republican"
-    return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt)
+    return render_template("listed_voter.html", american_img=american_img, trump_pic=trump_pic, Vice_President=Vice_President, kamala_pic=kamala_pic, republican=republican, republican_txt=republican_txt, login= session.get("user_id", 0))
 
 @app.route("/create_poll", methods=["GET", "POST"])
 @login_required
 def creat_poll():
     if request.method == "GET":
-        return render_template("create_poll.html")
+        return render_template("create_poll.html", login= session.get("user_id", 0))
     
     elif request.method == "POST":
         # recive a erequest for creating poll, the request mast contain a title, candidates and the number of voters
@@ -236,16 +236,16 @@ def creat_poll():
             "title",
             "date",
             "number_of_voters",
-            "discription",
-            "voting_system",
+            #"discription",
+            #"voting_system",
             "candidate_1",
             "candidate_2" # candidate_3, candidate_4, ...
         ]
         
         for i in inputs:
-            if request.form.get(i) == "":
+            if request.form.get(i, "") == "":
                 flash(f"Please provide all fields, {i} is missing")
-                return render_template("create_poll.html"), 400
+                return render_template("create_poll.html", login= session.get("user_id", 0)), 400
         number_of_candidates = 0
         for i in request.form:
             if i[:9] == "candidate":
@@ -255,8 +255,16 @@ def creat_poll():
                 raise Exception("Sorry, no numbers below one")
         except:
             flash("Please an integer for the number of voters")
-            return render_template("create_poll.html"), 400
+            return render_template("create_poll.html", login= session.get("user_id", 0)), 400
         
+        # check if the user have this title already
+        if db.execute(
+                "select * from polls where user_id = ? and title = ?;",
+                session["user_id"],
+                request.form.get("title")
+            ):
+            flash("title already used, please choose another one")
+            return render_template("create_poll.html", login= session.get("user_id", 0)), 400
         # add new poll
 
         db.execute("""
@@ -273,8 +281,8 @@ def creat_poll():
                 request.form.get("title"),
                 request.form.get("date"),
             int(request.form.get("number_of_voters")), # TODO: make sure the user give integer here 
-                request.form.get("discription"),
-                request.form.get("voting_system")
+                request.form.get("discription", ""),
+                "Plurality"# request.form.get("voting_system")
         )
 
         # add candidates
@@ -306,17 +314,17 @@ def creat_poll():
         
         # generate public and private keys
         for i in range(int(request.form.get("number_of_voters"))):
-            public_key, private_key = rsa.newkeys(1024)
+            ballot_encryption_key, ballot_decryption_key = rsa.newkeys(1024)
             db.execute("""
             INSERT INTO votes (
                 poll_id,
-                public_key,
-                private_key
+                ballot_encryption_key,
+                ballot_decryption_key
                 ) VALUES (?, ?, ?)
             """,
                 poll_id,
-                public_key.save_pkcs1("PEM").decode(),
-                private_key.save_pkcs1("PEM").decode()
+                ballot_encryption_key.save_pkcs1("PEM").decode(),
+                ballot_decryption_key.save_pkcs1("PEM").decode()
             )
 
         return redirect("/account")
@@ -350,7 +358,7 @@ def account():
     if request.method == "GET":
         user_info = db.execute("SELECT user_id, username, phone_number, date FROM users WHERE user_id =? ",  session["user_id"])[0]
         polls = db.execute("SELECT * FROM polls WHERE user_id =? ",  session["user_id"])
-        return render_template("account.html", user_info = user_info, polls = polls)
+        return render_template("account.html", user_info = user_info, polls = polls, login= session.get("user_id", 0))
 
 @app.route("/admin_dashboard_poll", methods=["GET"])
 @login_required
@@ -358,42 +366,93 @@ def admin_dashboard_poll():
     poll_id = int(request.args.get("poll_id"))
     poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
     candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
+    counts = db.execute("select voting_ballot, count(*) as count from votes where poll_id = ? group by voting_ballot", poll_id)
+    poll["Number_of_votes_so_far"] = 0
     # TODO return a summary of the results so far
-    return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates)
+    for i in range(len(candidates)):
+        for j in range(len(counts)):
+            candidates[i]["count"] = 0
+            if f"{candidates[i]["candidate_index"]}"==counts[j].get("voting_ballot"):
+                candidates[i]["count"] = counts[j].get("count")
+                poll["Number_of_votes_so_far"] += counts[j]["count"]
+                break
+    for i in range(len(candidates)):
+        candidates[i]["percentage"] = f"{candidates[i]["count"]/poll["Number_of_votes_so_far"]*100:0.1f}" if poll["Number_of_votes_so_far"] else 0
+    return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
 
 @app.route("/poll", methods=["GET", "POST"])
-@login_required
 def poll():
     if request.method == "GET":
         poll_id = int(request.args.get("poll_id"))
         poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
         candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
         # TODO return a summary of the results so far
-        return render_template("poll.html", poll = poll, candidates = candidates)
+        return render_template("poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
     
     elif request.method == "POST":
         inputs = [
-            "candidate_index",
-            "poll_id",
-            "voting_key"
+            "encryptedMessage",
+            "poll_id"
         ]
+        r = request.get_json()
         try:
-            int(request.form.get("poll_id"))
+            int(r.get("poll_id"))
         except:
+            print("poll_id is missing")
             flash("vote correctly and provide valid poll_id")
             return redirect("/")
-        if not request.form.get("candidate_index"):
+        if not r.get("encryptedMessage"):
+            print("encryptedMessage is missing")
             flash("please vote correctly and choose one of the candidates")
-            return redirect("/poll?poll_id="+request.form.get("poll_id"))
+            return redirect("/poll?poll_id="+f"{r.get("poll_id")}")
         
         # make sure the voting key is correct, use the voting key and the poll_id
         # if not, flash a message
         # if yes, make sure the candidate_index is valid, i.e. 0 < candidate_index <= number of candidates
-        return request.form
+        # print("Your vote was sent successfully")
+        # flash("Your vote was sent successfully")
+
+        encrypted_message = r.get("encryptedMessage")
+        encrypted_message_bytes = base64.b64decode(encrypted_message)
+        ids_ballot_decryption_keys = [
+            [a["vote_id"], rsa.PrivateKey.load_pkcs1(a["ballot_decryption_key"])] 
+            for a in db.execute(
+                "select vote_id, ballot_decryption_key from votes where poll_id = ?", r.get("poll_id")
+            )
+            ]
+        number_of_candidates = int(db.execute(
+                "select count(*) as count from candidates where poll_id = ?",
+                r.get("poll_id")
+            )[0]["count"])
+        valid = 0
+        for vote_id, ballot_decryption_key in ids_ballot_decryption_keys:
+            try:
+                decrypted_message = rsa.decrypt(encrypted_message_bytes, ballot_decryption_key).decode('utf-8')
+                if (
+                    int(decrypted_message) < 1 + number_of_candidates
+                    and
+                    int(decrypted_message) > 0
+                    ):
+                    valid = 1
+                    break
+            except:
+                pass
+
+        if not valid:
+            print("votting ballot is not valid")
+            flash("votting ballot is not valid")
+            return {"message": "votting ballot is not valid"}, 400
+        else:
+            print("votting ballot is valid")
+            flash("you have successfully voted")
+        
+        db.execute("update votes set voting_ballot =  ? where vote_id = ?", decrypted_message, vote_id)
+
+        return {"message": "you have successfully voted"}, 200
 
 @app.route("/about")
 def about():
-    return render_template("about_page.html",img1='..\\images\\voteChain.jpg')
+    return render_template("about_page.html",img1='..\\images\\voteChain.jpg', login= session.get("user_id", 0))
 
 if __name__ == '__main__':
     app.run(debug=True)
