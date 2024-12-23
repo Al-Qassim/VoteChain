@@ -5,6 +5,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="styles_home.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,24 +20,25 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to bottom, #fff, #03396C);
+            background: linear-gradient(to bottom, #fff, #fff, #fff, #4c759b);
         }
         .container {
             display: flex;
             width: 80%;
             max-width: 900px;
             background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             border-radius: 18px;
             overflow: hidden;
+            padding-right: 0%;
         }
         .form-container {
             background: #fff;
-            border-radius: 10px;
-            /* padding: 50px; */
-            /* padding-left: 70px; */
-            /* padding-right: 70px; */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* border-radius: 10px; */
+            /* padding: 50px;
+            padding-left: 70px;
+            padding-right: 70px; */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             width: 900px;
             height: 550px;
             background-color: #03396C;
@@ -46,7 +49,7 @@
         }
         .form-floating label {
             /* line-height: calc(3.5rem + 2px); Align the label */
-            margin-left: 10px;
+            /* margin-left: 10px; */
             color: #999999;
         } 
         .form-floating .form-control:focus ~ label,
@@ -67,7 +70,7 @@
             align-items: center;
             /* padding: 20px; */
             /* padding-bottom: 50px; */
-            border-radius: 8px;
+            /* border-radius: 8px; */
         }
         .vote-section img {
             width: 80%;
@@ -76,7 +79,7 @@
         .login-section {
             flex: 1;
             padding: 40px;
-            background-color: #999999;
+            background-color: #ffffff;
             border-radius: 18px;
         }
         h2 {
@@ -142,8 +145,8 @@
             background-color: #03396C; /* Matches the primary blue */
             color: #ffffff;
             border-radius: 10px; /* Rounded corners */
-            padding: 20px;
-            margin: 20px;
+            /* padding: 20px;
+            margin: 20px; */
         }
         .alert {
             display: block;
@@ -175,17 +178,14 @@
         <div class="vote-section grid-left">
             <div class="col animated-text" style="margin: 20px; color: #fff;">
                 <div class="row">
-                    <h1><b>Act as if the whole elections depends on your single vote.</b></h1>
-                </div>
-                <hr>
-                <div class="row">
-                    <h3>-John Wesley</h3>
+                    <img src="../static/images/logo/logo white.png" alt="VoteChain Logo" style="max-width: 300px; margin-left: 7%;">
+                    <h1 style="font-family: Italianno; font-size: 175%; padding: 10%;"><b>Act as if the whole elections depends on your single vote.</b></h1>
                 </div>
             </div>
         </div>
 
-        <div class="login-section grid-right" style="margin: auto;">
-            <h2>LOGIN</h2>
+        <div class="login-section grid-right">
+            <h2 style="font-family: Outfit; font-size: 300%; margin-top: 10%; margin-bottom: 25%;">VoteChain</h2>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -196,17 +196,17 @@
             <form class="form" action="/login" method="POST">
                 <div class="form-floating" style="padding-bottom: 20px;">
                     <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label" style="font-family: Outfit;">Username</label>
                 </div>
                 <div class="form-floating" style="padding-bottom: 20px;">
                     <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required>
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label" style="font-family: Outfit;">Password</label>
                 </div>
-                <div class="actions">
-                    <a href="/forgetPassword">Forgot password?</a>
+                <div class="actions" >
+                    <a href="/forgetPassword" style="color: #000000; font-family: Outfit;">Forgot password?</a>
                 </div>
-                <button type="submit" class="btn" style="background-color: #03396C;">Login</button>
-                <a href="/register" type="button" class="btn secondary">Register</a>
+                <button type="submit" class="btn" style="font-family: Outfit; background-color: #03396C;">Login</button>
+                <a href="/register" type="button" class="btn secondary" style="font-family: Outfit;">Register</a>
             </form>
         </div>
     </div>
