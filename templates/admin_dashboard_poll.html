@@ -3,10 +3,12 @@
 
 {% block main %}
 
-<h2>Your Polls</h2>
   <div class=" form-container card mb-3 p-50" style="background-color: #03396C; color: white;">
     <h3 style="text-align: left; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">{{poll.title}}</h3>
-    
+    <div style="text-align: center;">
+      <h4>{%if poll.results == "win" and poll.finish%}The WINNER {%endif%} {%if poll.results == "draw" and poll.finish%} DRAW {%endif%}</h4>
+      <h3 style="color: #1bda4b;">{%if poll.results == "win" and poll.finish%}{{poll.winner}}{%endif%}</h3>
+    </div>
     <div class="grid-section" style="margin-bottom: 2px;">
       <div class="grid-left">
         <h5>{{poll.voting_system}}</h5>
@@ -23,6 +25,22 @@
         </div>
       {% endfor %}
     </div>
+    {%if poll.user_id == login%}
+    <form method="POST" action="/download" style="padding-left: 30px; padding-top: 15px;">
+      <input type="hidden" name="poll_id" value={{poll.poll_id}}>
+      <button class="btn" type="submit" style="background-color: #c0ce40; color: rgb(0, 0, 0);">Download Voting Keys</button>
+    </form>
+    {%if not poll.finish%}
+    <form method="POST" action="/admin_dashboard_poll" style="padding-left: 30px; padding-top: 15px;">
+      <input type="hidden" name="poll_id" value={{poll.poll_id}}>
+      <button class="btn" type="submit" style="background-color: #2d882d; color: white;">Stop Poll</button>
+    </form>
+    {%endif%}
+    <form method="POST" action="/delete_poll" style="padding-left: 30px; padding-top: 15px;">
+      <input type="hidden" name="poll_id" value={{poll.poll_id}}>
+      <button class="btn" type="submit" style="background-color: #ce4040; color: white;">Delete Poll</button>
+    </form>
+    {%endif%}
     
   </div>
   

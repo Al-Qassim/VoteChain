@@ -33,6 +33,8 @@
         <div class="grid-left">
           <h4>{{ poll.title }}</h4>
           <p class="text-danger">Final day at {{poll.deadline}}</p>
+          {%if poll.finish %}<p class="text-danger">Poll Ended</p>{%endif%}
+          
           <p>Created by {{poll.username}}</p>
 
         </div>

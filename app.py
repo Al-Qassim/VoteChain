@@ -6,6 +6,8 @@ app = Flask(__name__)
 # Custom filter
 # app.jinja_env.filters["usd"] = usd
 
+# TODO: logo, public results on button and deadline, library, cs50 check
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -23,22 +25,24 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 # @login_required
 def index():
-    if request.method == "GET":
-        polls = db.execute("""
-            SELECT poll_id, users.user_id, title, username, deadline
-            FROM polls 
-            inner join users 
-            on users.user_id = polls.user_id
-        """)
-        
-        return render_template("homepage.html", polls = polls, login= session.get("user_id", 0))
-    
-    elif request.method == "POST":
-        pass
+    polls = db.execute("""
+        SELECT poll_id, users.user_id, title, username, deadline, finish
+        FROM polls 
+        inner join users 
+        on users.user_id = polls.user_id
+    """)
 
+    for poll in polls:
+        if (not poll.get("finish")) and (datetime.strptime(datetime.now().strftime("%Y-%m-%d"), "%Y-%m-%d").timestamp() >=  datetime.strptime(poll.get("deadline"), "%Y-%m-%d").timestamp()):
+            db.execute("update polls set finish = 1 where poll_id = ?", poll.get("poll_id"))
+            calculate_winner(poll.get("poll_id"), db)
+
+ 
+    return render_template("homepage.html", polls = polls, login= session.get("user_id", 0))
+    
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """
@@ -246,6 +250,7 @@ def creat_poll():
             if request.form.get(i, "") == "":
                 flash(f"Please provide all fields, {i} is missing")
                 return render_template("create_poll.html", login= session.get("user_id", 0)), 400
+       
         number_of_candidates = 0
         for i in request.form:
             if i[:9] == "candidate":
@@ -360,11 +365,27 @@ def account():
         polls = db.execute("SELECT * FROM polls WHERE user_id =? ",  session["user_id"])
         return render_template("account.html", user_info = user_info, polls = polls, login= session.get("user_id", 0))
 
-@app.route("/admin_dashboard_poll", methods=["GET"])
+@app.route("/admin_dashboard_poll", methods=["GET", "POST"])
 @login_required
 def admin_dashboard_poll():
-    poll_id = int(request.args.get("poll_id"))
-    poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+    try:
+        if request.method == "GET":
+            poll_id = int(request.args.get("poll_id"))
+        elif request.method == "POST": 
+            poll_id = int(request.form.get("poll_id"))
+        poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+    except:
+        flash("no such poll exit")
+        return redirect("/"), 400
+
+    if datetime.strptime(datetime.now().strftime("%Y-%m-%d"), "%Y-%m-%d").timestamp() >=  datetime.strptime(poll.get("deadline"), "%Y-%m-%d").timestamp():
+        db.execute("update polls set finish = 1 where poll_id = ?", poll_id)
+        calculate_winner(poll_id, db)
+    
+    if poll.get("user_id") != session.get("user_id"):
+        flash("login first to use dashboard")
+        return redirect("/login"), 400
+
     candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
     counts = db.execute("select voting_ballot, count(*) as count from votes where poll_id = ? group by voting_ballot", poll_id)
     poll["Number_of_votes_so_far"] = 0
@@ -378,18 +399,71 @@ def admin_dashboard_poll():
                 break
     for i in range(len(candidates)):
         candidates[i]["percentage"] = f"{candidates[i]["count"]/poll["Number_of_votes_so_far"]*100:0.1f}" if poll["Number_of_votes_so_far"] else 0
-    return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
 
+    if request.method == "GET":
+        return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
+    elif request.method == "POST": 
+        # stop poll
+        db.execute("update polls set finish = 1 where poll_id = ?", poll_id)
+        calculate_winner(poll_id, db)
+
+        return redirect("/account")
+    
 @app.route("/poll", methods=["GET", "POST"])
 def poll():
     if request.method == "GET":
+        try:
+            poll_id = int(request.args.get("poll_id"))
+            poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+        except:
+            flash("no such poll exit")
+            return redirect("/"), 400
+
+        if datetime.strptime(datetime.now().strftime("%Y-%m-%d"), "%Y-%m-%d").timestamp() >=  datetime.strptime(poll.get("deadline"), "%Y-%m-%d").timestamp():
+            db.execute("update polls set finish = 1 where poll_id = ?", poll_id)
+            calculate_winner(poll_id, db)
+
+
+    
         poll_id = int(request.args.get("poll_id"))
         poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
         candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
+
+        if not poll.get("finish"): # render votting ballot
+            return render_template("poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
+
+        candidates =  db.execute("SELECT * FROM candidates WHERE poll_id = ? ", poll_id)
+        counts = db.execute("select voting_ballot, count(*) as count from votes where poll_id = ? group by voting_ballot", poll_id)
+        poll["Number_of_votes_so_far"] = 0
         # TODO return a summary of the results so far
-        return render_template("poll.html", poll = poll, candidates = candidates, login= session.get("user_id", 0))
-    
+        for i in range(len(candidates)):
+            for j in range(len(counts)):
+                candidates[i]["count"] = 0
+                if f"{candidates[i]["candidate_index"]}"==counts[j].get("voting_ballot"):
+                    candidates[i]["count"] = counts[j].get("count")
+                    poll["Number_of_votes_so_far"] += counts[j]["count"]
+                    break
+        for i in range(len(candidates)):
+            candidates[i]["percentage"] = f"{candidates[i]["count"]/poll["Number_of_votes_so_far"]*100:0.1f}" if poll["Number_of_votes_so_far"] else 0
+        return render_template("admin_dashboard_poll.html", poll = poll, candidates = candidates, login = session.get("user_id", 0))
+
     elif request.method == "POST":
+
+        try:
+            poll_id = int(request.get_json().get("poll_id"))
+            poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+        except:
+            flash("no such poll exit")
+            return redirect("/"), 400
+
+        if datetime.strptime(datetime.now().strftime("%Y-%m-%d"), "%Y-%m-%d").timestamp() >=  datetime.strptime(poll.get("deadline"), "%Y-%m-%d").timestamp():
+            db.execute("update polls set finish = 1 where poll_id = ?", poll_id)
+            calculate_winner(poll_id, db)
+
+        if poll.get("finish"):
+            flash("this poll ended already")
+            return redirect("/")
+        
         inputs = [
             "encryptedMessage",
             "poll_id"
@@ -453,6 +527,33 @@ def poll():
 @app.route("/about")
 def about():
     return render_template("about_page.html",img1='..\\images\\voteChain.jpg', login= session.get("user_id", 0))
+
+@app.route("/download", methods=["POST"])
+@login_required
+def download():
+    #security
+    try:
+        poll_id = int(request.form.get("poll_id"))
+        poll = db.execute("SELECT * FROM polls WHERE poll_id = ? ", poll_id)[0]
+    except:
+        flash("no such poll exit")
+        return redirect("/"), 400
+
+    if datetime.strptime(datetime.now().strftime("%Y-%m-%d"), "%Y-%m-%d").timestamp() >=  datetime.strptime(poll.get("deadline"), "%Y-%m-%d").timestamp():
+        db.execute("update polls set finish = 1 where poll_id = ?", poll_id)
+        calculate_winner(poll_id, db)
+    
+    if poll.get("user_id") != session.get("user_id"):
+        flash("login first to use dashboard")
+        return redirect("/login"), 400
+    
+    # download
+    file_path = "static/keys/voting_keys.csv"
+    pd.DataFrame(db.execute("select ballot_encryption_key, ballot_decryption_key from votes where poll_id = ?", poll_id)).to_csv(file_path)
+    try:
+        return send_file(file_path, as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
 
 if __name__ == '__main__':
     app.run(debug=True)

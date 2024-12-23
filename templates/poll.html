@@ -38,7 +38,7 @@
           <div class="form-floating" style="margin-bottom: 50px;">
             <input type="text" id="voting_key" class="form-control" name="voting_key" placeholder="voting_key" required>
             <label for="voting_key" class="form-label" style="color: #03396C;">Voting Key</label>
-            <input name="poll_id" hidden value = {{poll.poll_id}}>
+            <input id="poll_id" hidden value = {{poll.poll_id}}>
           </div>
           
           <button type="submit" class="btn btn-secondary" style="background-color: #999999; color: #03396C; place-items: center;">Encrypt and Send Voting Ballot</button>
@@ -63,6 +63,7 @@
         console.log("candidate_index:", event.target.elements.candidate_index.value);
         var message = event.target.elements.candidate_index.value;
         var publicKey = document.getElementById("voting_key").value;
+        var poll_id = document.getElementById("poll_id").value;
     
         // Create an instance of JSEncrypt
         var encrypt = new JSEncrypt();
@@ -83,7 +84,7 @@
                 },
                 body: JSON.stringify({
                     encryptedMessage: encryptedMessage,
-                    poll_id: 41,
+                    poll_id: poll_id,
                 })
             })
             .then(response => response.json())
