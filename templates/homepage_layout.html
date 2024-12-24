@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #fff, #03396C);
-      
+      background: linear-gradient(to bottom, #fff, #fff, #fff, #4c759b);
       overflow-x: hidden;
     }
     main {
@@ -86,8 +87,9 @@
       box-shadow: 0 0 15px #4267b2;
     }
     ul li:hover {
-      color: #456cba;
-      box-shadow: 0 0 15px #4267b2;
+      background-color: #d1d7f1;
+      border-radius: 18px;
+      /* box-shadow: 0 0 15px #4267b2; */
       text-shadow: 0 0 15px #4267b2;
     }
 
@@ -110,17 +112,18 @@
   </script>
 </head>
 <body>
-  <header class="bg-light shadow">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="/">
-        <img src="../static/images/voteChain.jpg" alt="VoteChain Logo" class="mb-3" style="max-width: 150px;">
-      </a>
+  <header>
+    <div class="container d-flex justify-content-between align-items-center" style="margin-top: 20px;">
+      <div>
+      <a href="/"><img src="../static/images/logo/logo black.png" alt="VoteChain Logo" style="max-width: 90px; padding-left: 15px; padding-top: 12px; padding-bottom: 12px; align-content: right;"></a> 
+      <a href="/"><img src="../static/images/logo/title black.png" alt="VoteChain Logo" style="max-width: 90px; padding-top: 15px; padding-bottom: 12px;"></a>
+      </div>
       <nav>
         <ul class="nav">
-          <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Library</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout">{%if login%}Logout{%else%}Login/Signup{%endif%}</a></li>
+          <li class="nav-item"><a class="nav-link" href="/account" style="font-family: Outfit;">Account</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" style="font-family: Outfit;">Library</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about" style="font-family: Outfit;">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="logout" style="font-family: Outfit;">{%if login%}Logout{%else%}Login/Signup{%endif%}</a></li>
         </ul>
       </nav>
     </div>
