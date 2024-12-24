@@ -3,6 +3,10 @@ Open Source BlockChain-based election management web application
 
 Despite the digital age we live in, elections are still conducted with paper in most parts of the world. That is because elections require serious security requirements that, until the last decade, digital systems didn't have the right tools to meet those requirements. Blockchain and zk-SNARK are modern tools that make it possible for the electronic systems to meet the elections requirements (other than the **safe input device**  requirement). In this project, we developed the classical basics for such a system; all essential components, from users managing their polls to displaying results, are present. Future development would include the integration of this web app with the Ethereum blockchain.
 
+## Demo
+* short 3 minute video: https://youtu.be/aE12l43qhBk
+* full 8 minute video: https://youtu.be/6hPY2RpzsEI 
+
 ## Context
 
 This project was submitted as the final project to the CS50x (2024) UniTech Iraq course, made by: 
