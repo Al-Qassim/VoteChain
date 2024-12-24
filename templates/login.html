@@ -177,14 +177,18 @@
         <div class="vote-section grid-left">
             <div class="col animated-text" style="margin: 20px; color: #fff;">
                 <div class="row">
+                    <a href="/">
                     <img src="../static/images/logo/logo white.png" alt="VoteChain Logo" style="max-width: 300px; margin-left: 7%;">
+                    </a>
                     <h1 style="font-family: Outfit; font-size: 110%; padding: 10%;"><b>Act as if the whole elections depends on your single vote.</b></h1>
                 </div>
             </div>
         </div>
 
         <div class="login-section grid-right">
+            <a href="/">
             <h2 style="font-family: Outfit; font-size: 300%; margin-top: 17%; margin-bottom: 25%; color: #000;">VoteChain</h2>
+            </a>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -201,7 +205,7 @@
                     <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required>
                     <label for="password" class="form-label" style="font-family: Outfit;">Password</label>
                 </div>
-                <div class="actions" >
+                <div class="actions">
                     <a href="/forgetPassword" style="color: #000000; font-family: Outfit;">Forgot password?</a>
                 </div>
                 <button type="submit" class="btn" style="font-family: Outfit; background-color: #03396C;">Login</button>

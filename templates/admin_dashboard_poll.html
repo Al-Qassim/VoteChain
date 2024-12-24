@@ -9,9 +9,12 @@
       <h4>{%if poll.results == "win" and poll.finish%}The WINNER {%endif%} {%if poll.results == "draw" and poll.finish%} DRAW {%endif%}</h4>
       <h3 style="color: #1bda4b;">{%if poll.results == "win" and poll.finish%}{{poll.winner}}{%endif%}</h3>
     </div>
-    <div class="grid-section" style="margin-bottom: 2px;">
-      <div class="grid-left">
+    <div  style="margin-bottom: 2px;">
+      <div>
         <h5>{{poll.voting_system}}</h5>
+        <h5>Discription:</h5>
+        <h6 style="text-align:left; color: white; padding-left: 20px; padding-right: 0px; ">{{poll.discription}}</h6>
+
         <h5>Number of Voters: {{poll.number_of_voters}}</h5>
         <h5>Number of votes so far: {{poll.Number_of_votes_so_far}}</h5>
       </div>
