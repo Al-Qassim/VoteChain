@@ -1,7 +1,7 @@
 # VoteChain
 Open Source BlockChain-based election management web application
 
-Despite the digital age we live in, elections are still conducted with paper in most parts of the world. That is because elections require serious security requirements that, until the last decade, digital systems didn't have the right tools to meet those requirements. Blockchain and zk-SNARK are modern tools that make it possible for the electronic systems to meet the elections requirements (other than the **safe input device**  requirement). In this project, we developed the classical basics for such a system; all essential components, from users managing their polls to displaying results, are present. Future development would include the integration of this web app with the Ethereum blockchain.
+Despite the digital age we live in, elections are still conducted with paper in most parts of the world. That is because elections require serious security requirements that, until the last decade, digital systems didn't have the right tools to meet those requirements. Blockchain and zk-SNARK are modern tools that make it possible for the electronic systems to meet the elections requirements (other than the **safe input device** requirement). In this project, we developed the classical basics for such a system; all essential components, from users managing their polls to displaying results, are present. Future development would include the integration of this web app with the Ethereum blockchain.
 
 ## Demo
 * short 3 minute video: https://youtu.be/aE12l43qhBk
@@ -9,7 +9,7 @@ Despite the digital age we live in, elections are still conducted with paper in 
 
 ## Context
 
-This project was submitted as the final project to the CS50x (2024) UniTech Iraq course, made by: 
+This project was submitted as the final project to the CS50x (2024) UniTech Iraq course, made by:
 * Alqassim Ali
 * Hadeel Saad
 * Zahraa Muafaq
@@ -25,23 +25,23 @@ This project was submitted as the final project to the CS50x (2024) UniTech Iraq
     Future updates may include supporting the following systems:
     * **Runoff** (https://cs50.harvard.edu/x/2024/psets/3/runoff/).
     * **Tideman** (https://cs50.harvard.edu/x/2024/psets/3/tideman/).
-* Only support simple candidates voting (The Party List System will be supported in future updates).   
+* Only support simple candidates voting (The Party List System will be supported in future updates). 
 * Users can delete their polls.
 * Voters can vote more than once, and only the last vote will be counted. This ensures **coercion resistance**.
 * Users can reset their passwords.
 * Users need not have an account to be able to view the polls.
 * Users need not have an account to be able to vote; they only need a valid voting key.
-* Upon creating a poll, users can download the voting keys in a CSV file. 
+* Upon creating a poll, users can download the voting keys in a CSV file.
 
 ## Election System Requirements
 Any election system should guarantee the following security requirement:
 * **Correct execution**: correctly processes the votes according to some pre-defined rules and returns the correct result.
-* **Censorship resistance**: all eligible voters can participate and have their vote counted, even if that is against the will of big player. 
+* **Censorship resistance**: all eligible voters can participate and have their vote counted, even if that is against the will of big player.
 * **Privacy**: You should not be able to tell which candidate someone specific voted for, or even if they voted at all. The main benefit is to avoid potential social problems among the votes (the people).
 * **Coercion resistance**: You should not be able to prove to someone else how you voted, even if you want to. This also eliminates vote selling.
 * **Safe input devices**: The voters devices (computers and self-phones) should be secure from hacking.
 
-Note: Right now, these requirements are not all met by the current application. Specifically, there is no guarantee for the (censorship resistance) and (correct execution) since the corrupt election committee can easily manipulate the database and, ultimately, the results. 
+Note: Right now, these requirements are not all met by the current application. Specifically, there is no guarantee for the (censorship resistance) and (correct execution) since the corrupt election committee can easily manipulate the database and, ultimately, the results.
 
 ## How it works currently:
 
@@ -49,7 +49,7 @@ Let's go through an example of an election from start to finish:
 
 * User X creates a new poll according to the voting systems available.
 * User X wants n voters to participate in the poll; this is necessarily because most elections require certain eligibility requirements to participate.
-* User X will generate n pairs of public/secret keys and send each public key to each voter. For the sake of clarity, let's use the term (voting keys) instead of "public key, since the voters will use them to encrypt their voting ballot. Here you should note that this app is not responsible for distributing the voting keys. 
+* User X will generate n pairs of public/secret keys and send each public key to each voter. For the sake of clarity, let's use the term (voting keys) instead of "public key, since the voters will use them to encrypt their voting ballot. Here you should note that this app is not responsible for distributing the voting keys.
 * Of course, user X should not let anyone know the secret keys (private), not even the voters, and each voter should not let other people know what their public keys are.
 * Each voter specifies the candidate he will vote for and encrypts his index, i.e., candidate index, with the voting key he got from user X. Note here that the encrypting is done on the client side (front end).
 * Finally, the voter simply casts it, i.e., casts the encrypted voting ballot, to user X (or to the blockchain, if the blockchain was used).
@@ -71,7 +71,7 @@ The main resource so far for the security system of the app will be based on thi
 
 Essentially, the election starts with the election commission generating public key and private key pairs for every voter; voters will encrypt their voting ballot with their public key, which guarantees **privacy**. Voters will be able to change their vote; only the last vote will be counted. This ensures **coercion resistance**. Then they publish their encrypted voting ballot to the Ethereum blockchain; this guarantees **censorship resistance** since no one can alter the blockchain or prevent others from writing to the blockchain. When the election deadline comes, the commission reads the encrypted ballots from the blockchain and decrypts them using private keys. The results will be calculated according to the chosen election system, and a zk-SNARK proof is generated for the results. The purpose of zk-SNARK is that it guarantees that the commission **did the calculations correctly** with no manipulations. Finally, the results and the zk-SNARK will be published to the public.
 
-The blockchain feature is not implemented yet. 
+The blockchain feature is not implemented yet.
 
 ## Database Structure
 
@@ -94,19 +94,19 @@ The database contains several tables; the following are the tables and columns i
     * candidate_index (from 1 to n, where n is the number of candidates)
     * candidate_name
     * poll_id
-            
+     
 * votes
-    * vote_id 
+    * vote_id
     * poll_id
     * voting_ballot (text)
     * ballot_encryption_key (voter's public key)
     * ballot_decryption_key (voter's private key)
 
 * users
-    * user_id 
-    * username 
-    * hash_password 
-    * phone_number 
-    * signature_private_key 
+    * user_id
+    * username
+    * hash_password
+    * phone_number
+    * signature_private_key
     * signature_public_key
     * date (registration date)
