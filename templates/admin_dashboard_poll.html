@@ -9,8 +9,11 @@
     <div class="grid-section" style="margin-bottom: 2px;">
       <div class="grid-left">
         <h5>{{poll.voting_system}}</h5>
-        <h5>Number of Voters: {{poll.number_of_voters}}</h5>
-        <h5>Number of votes so far: TODO</h5>
+        <h5>Description:</h5>
+        <h6 style="text-align:left; color: white; padding-left: 20px; padding-right: 0px; ">{{poll.discription}}</h6>
+
+        <h5>Number of Voters: <span style="color: #2bc14e;">{{poll.number_of_voters}}</span></h5>        
+        <h5>Number of votes so far: <span style="color: #2bc14e;">{{poll.Number_of_votes_so_far}}</span></h5>
       </div>
     </div>
 
@@ -18,7 +21,7 @@
       {% for candidate in candidates%}
         <div class="card mb-3 p-3" style="background-color: #999999;">
           <h4 style="text-align: left; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{candidate.candidate_name}}</h4>
-          <p style="margin-left: 15px; color: #03396C;">Number of votes so far: TODO</p>
+          <p style="margin-left: 15px; color: #03396C;">Got <span style="color: #c12b2b;">{{candidate.count}}</span> votes <span style="color: #c12b2b;"><b>({{candidate.percentage}}%)</b></span> so far</p>
         </div>
       {% endfor %}
     </div>

@@ -11,7 +11,7 @@
     <link href="styles_home.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to bottom, #fff, #03396C);
+            background: linear-gradient(to bottom, #fff, #fff, #4278ab, #03396C);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -20,12 +20,13 @@
             /* zoom: 1.5; Adjust value to make the content bigger */
         }
         .form-container {
-            background: #ffffff8f;
+            /* background: #ffffff8f; */
+            background: linear-gradient(to bottom, #fff, #fff, #4278ab, #03396C);
             border-radius: 10px;
             padding: 50px;
             padding-left: 70px;
             padding-right: 70px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(105, 145, 209, 0.2);
             width: 900px;
             height: 550px;
         }
@@ -103,8 +104,9 @@
 <body>
     <div class="form-container">
         <div class="logo">
-            <img src="{{ image_url }}" alt="VoteChain Logo">
-            <h5>VoteChain</h5>
+            <!-- <img src="{{ image_url }}" alt="VoteChain Logo"> -->
+            <!-- <h5>VoteChain</h5> -->
+            <h2 style="font-family: Outfit; font-size: 300%; color: #000;">VoteChain</h2>
         </div>
         <main>
             {% block main %}

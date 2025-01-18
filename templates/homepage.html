@@ -20,10 +20,21 @@
   <!-- <form class="form" action="/voter" method="POST" id="homepageForm"> -->
     <h3 class="h5 mb-3" style="padding-left: 20px;">Right Now</h3>
     {% for poll in polls%}
-    <a href='/poll?poll_id={{poll.poll_id }}' style="text-decoration: none;">
-      <section class="grid-section">
-
-        <div class="grid-left">
+    <a 
+    href='/poll?poll_id={{poll.poll_id }}' 
+    style="
+      font-family: Outfit; 
+      text-decoration: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      color: white;
+      background-color: #03396C;
+      border-radius: 10px;
+      margin-bottom: 3%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      ">
+      
+        <div style="padding: 20px; margin: 30px;">
           <h4>{{ poll.title }}</h4>
           <p class="text-danger">Final day at {{poll.deadline}}</p>
           <p>Created by {{poll.username}}</p>

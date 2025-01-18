@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to bottom, #fff, #03396C);
+            background: linear-gradient(to bottom, #fff, #fff, #4278ab, #03396C);
         }
         .container {
             display: flex;
@@ -184,8 +184,10 @@
             </div>
         </div>
 
-        <div class="login-section grid-right" style="margin: auto;">
-            <h2>LOGIN</h2>
+        <div class="login-section grid-right">
+            <a href="/">
+            <h2 style="font-family: Outfit; font-size: 300%; margin-top: 17%; margin-bottom: 10%; color: #000;">VoteChain</h2>
+            </a>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
